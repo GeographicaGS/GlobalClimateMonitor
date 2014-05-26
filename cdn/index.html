@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+        
+    <link rel="shortcut icon" href="img/favicon.png">
+
+    <title>Global Climate Viewer</title>
+
+    <link rel='stylesheet' href='css/reset.css'>
+    <link rel='stylesheet' href='css/base.css'>
+    <link rel='stylesheet' href='css/main.css'>
+</head>
+<body>
+	<div id="map"> <!-- INSERTE AQUÍ EL MAPA  --> </div>
+	<div id="sidebar">
+		<header>
+			<img src="img/GCV_simbolo_proyecto.svg">
+			<h1>Global Climate <span>Viewer</span></h1>
+			<a href="#"><img src="img/GCV_icon_plegar.svg"></a>
+		</header>
+		<nav>
+			<ul>
+				<li class="expanded">
+					<h2><span class="light">By</span> Monthly values</h2>
+					<div class="controls">
+						<select>
+							<option>Monthly temperature</option>
+							<option>Monthly rain</option>
+						</select>
+						<select>
+							<option>August</option>
+							<option>September</option>
+						</select>
+						<select>
+							<option>1930</option>
+							<option>1931</option>
+						</select>
+					</div>
+				</li>
+				<li>
+					<h2><span>By</span> Normals</h2>
+					<div class="controls">
+						<select>
+							<option>Monthly temperature</option>
+							<option>Monthly rain</option>
+						</select>
+						<select>
+							<option>August</option>
+							<option>September</option>
+						</select>
+						<select>
+							<option>1930</option>
+							<option>1931</option>
+						</select>
+					</div>
+				</li>
+				<li>
+					<h2><span>By</span> Stations</h2>
+					<div class="controls">
+						<select>
+							<option>Monthly temperature</option>
+							<option>Monthly rain</option>
+						</select>
+						<select>
+							<option>August</option>
+							<option>September</option>
+						</select>
+						<select>
+							<option>1930</option>
+							<option>1931</option>
+						</select>
+					</div>
+				</li>
+			</ul>
+			<p class="resume"><span class="category"><span class="light">By</span> Monthly values</span><span class="criteria">Monthly temperature</span> August 1930</p>
+		</nav>
+		<footer>
+			<a class="logo" href="http://geografiaehistoria.us.es/" target="_blank"><img src="img/GCV_logo_US_blanco.svg"></a>
+			<div class="links">
+				<a href="http://geografiaehistoria.us.es/" target="_blank" class="concealable">Facultad de Geografía</a>
+				<a href="http://geographica.gs" target="_blank"><span class="concealable">Geographica </span><img src="img/logo_geographica.svg"></a>
+			</div>
+		</footer>
+	</div>
+	<aside id="legend">
+		<h3>Monthly temperature</h3>
+		<div class="content">
+			<ul>
+				<li class="blue1">< -40</li>
+				<li class="blue2">-40 - -30</li>
+				<li class="blue3">-30 - -20</li>
+				<li class="green1">-20 - -10</li>
+				<li class="green2">-10 - 0</li>
+				<li class="yellow1">0 - 10</li>
+				<li class="orange1">10 - 20</li>
+				<li class="orange2">20 - 30</li>
+				<li class="orange3">30 - 40</li>
+				<li class="red1">>40</li>
+			</ul>
+			<div class="slider">
+				<label for="slider_opacity">Opacity</label>
+				<input type="range" min="0" max="100">
+			</div>
+		</div>
+	</aside>
+	<footer id="credits">
+		<span>
+			Credits: <a href="http://geografiaehistoria.us.es/" target="_blank">University of Seville</a> <a href="http://geographica.gs" target="_blank">Geographica</a>
+		</span>
+		<span>
+			Map data: (c) <a href="http://www.openstreetmap.org/" target="_blank">OpenStreetMap</a> contributors, CC-BY-SA.
+		</span>
+		<span>
+			<a href="#" target="_blank">Terms of Service</a> <a href="#" target="_blank">Privacy policy</a>
+		</span>
+	</footer>
+
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="js/scripts.js"></script>
+</body>
+</html>
