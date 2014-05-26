@@ -1,0 +1,518 @@
+@font-face {
+    font-family: 'latoblack';
+    src: url('../fonts/lato-bla-webfont.eot');
+    src: url('../fonts/lato-bla-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/lato-bla-webfont.woff') format('woff'),
+         url('../fonts/lato-bla-webfont.ttf') format('truetype'),
+         url('../fonts/lato-bla-webfont.svg#latoblack') format('svg');
+    font-weight: 900;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'latobold';
+    src: url('../fonts/lato-bol-webfont.eot');
+    src: url('../fonts/lato-bol-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/lato-bol-webfont.woff') format('woff'),
+         url('../fonts/lato-bol-webfont.ttf') format('truetype'),
+         url('../fonts/lato-bol-webfont.svg#latobold') format('svg');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'latolight';
+    src: url('../fonts/lato-lig-webfont.eot');
+    src: url('../fonts/lato-lig-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/lato-lig-webfont.woff') format('woff'),
+         url('../fonts/lato-lig-webfont.ttf') format('truetype'),
+         url('../fonts/lato-lig-webfont.svg#latolight') format('svg');
+    font-weight: 100;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'latolight_italic';
+    src: url('../fonts/lato-ligita-webfont.eot');
+    src: url('../fonts/lato-ligita-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/lato-ligita-webfont.woff') format('woff'),
+         url('../fonts/lato-ligita-webfont.ttf') format('truetype'),
+         url('../fonts/lato-ligita-webfont.svg#latolight_italic') format('svg');
+    font-weight: 100;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'latoregular';
+    src: url('../fonts/lato-reg-webfont.eot');
+    src: url('../fonts/lato-reg-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/lato-reg-webfont.woff') format('woff'),
+         url('../fonts/lato-reg-webfont.ttf') format('truetype'),
+         url('../fonts/lato-reg-webfont.svg#latoregular') format('svg');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'latoitalic';
+    src: url('../fonts/lato-regita-webfont.eot');
+    src: url('../fonts/lato-regita-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/lato-regita-webfont.woff') format('woff'),
+         url('../fonts/lato-regita-webfont.ttf') format('truetype'),
+         url('../fonts/lato-regita-webfont.svg#latoitalic') format('svg');
+    font-weight: 400;
+    font-style: italic;
+}
+
+body {
+	font-family: 'latoregular', sans-serif;
+}
+
+strong, b {
+	font-family: 'latobold', sans-serif;
+}
+
+i {
+	font-family: 'latoitalic', sans-serif;
+}
+
+h1 {
+	font-family: 'latoblack', sans-serif;
+	font-size: 1.45em;
+	color: #FFF;
+}
+
+h2 {
+	font-family: 'latobold', sans-serif;
+	font-size: 0.95em;
+	color: #FFF;
+}
+
+h3 {
+	font-family: 'latobold', sans-serif;
+	font-size: 1em;
+}
+
+	h1 span, h2 span {
+		font-family: 'latolight', sans-serif;
+		font-weight: normal;
+	}
+
+span.light {
+	font-family: 'latolight', sans-serif;
+	font-weight: normal;
+}
+
+#map {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+
+	background: url('../img/map.jpg');
+	background-size: cover;
+}
+
+#sidebar {
+	position: absolute;
+	left: 0;
+	top: 0;
+	background: rgba(96, 98, 108, .9);
+	border-right: 1px solid #42444e;
+	width: 220px;
+	height: 100%;
+}
+
+	#sidebar header {
+		padding: 10px;
+		position: relative;
+		border-bottom: 1px solid rgba(41,43,52, .2);
+	}
+
+		#sidebar header > img {
+			display: block;
+			width: 55px;
+			margin-bottom: 10px;
+		}
+
+		#sidebar header a:last-child {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+		}
+
+	#sidebar nav {		
+	}
+
+		#sidebar nav ul {
+			position: relative;
+		}
+
+			#sidebar nav ul li {
+				padding: 10px;
+				border-bottom: 1px solid rgba(255,255,255,.1);
+				max-height: 42px;
+				overflow: hidden;
+				transition: max-height .5s ease;
+			}
+
+		#sidebar nav h2 {
+			color: #cdcdd0;
+			margin: 2px 0 2px 1px;
+			cursor: pointer;
+		}
+
+		#sidebar nav .controls {
+			display: none;
+			height: 0;
+		}
+
+			#sidebar nav .controls:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+
+			#sidebar nav .controls select {
+				background: url('../img/GCV_icon_selector.svg') no-repeat right 10px center #fff;
+				background-color: #fff;
+				border: none;
+				outline: none;
+				font-size: 10pt;
+				padding: 8px 30px 8px 8px;
+				margin-top: 10px;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				text-indent: 0.01px;
+				text-overflow: '';
+			}
+
+				@-moz-document url-prefix() { 
+				  #sidebar nav .controls select {
+					padding: 8px 15px 8px 8px;	
+				  }
+				}
+
+				#sidebar nav .controls select:first-child {
+					width: 100%;
+					margin-top: 28px;
+					font-family: 'latobold', sans-serif;
+				}
+
+				#sidebar nav .controls select:nth-child(2) {
+					margin-right: 10px;
+					float: left;
+				}
+
+				#sidebar nav .controls select:last-child {
+					float: right;
+				}
+
+			#sidebar nav ul li.expanded {
+				background-color: #797b84;
+				max-height: 170px;
+			}
+
+				#sidebar nav ul li.expanded h2 {
+					color: #fff;
+				}
+
+				#sidebar nav ul li.expanded .controls {
+					display: block;
+					height: auto;
+				}
+
+		#sidebar nav .resume {
+			display: none;
+		}
+
+	#sidebar footer {
+		position: absolute;
+		left: 0;
+		bottom: 0;
+		width: 100%;
+
+		color: #fff;
+		font-size: 0.7em;
+	}
+
+		#sidebar footer > a {
+			margin: 10px;
+			display: block;
+		}
+
+		#sidebar footer .links {
+			border-top: 1px solid rgba(255,255,255,.1);
+		}
+
+			#sidebar footer .links:after {
+				content: "";
+				display: block;
+				clear: both;
+			}
+
+			#sidebar footer .links a {
+				padding: 6px;
+				vertical-align: top;
+			}
+
+				#sidebar footer .links a:first-child {
+					float: left;
+					border-right: 1px solid rgba(255,255,255,.1);
+					padding: 9px 8px 6px 6px;
+				}
+
+				#sidebar footer .links a:last-child {
+					float: right;
+				}
+
+
+	#sidebar.contracted {
+		width: 50px;
+	}
+
+		#sidebar.contracted header {
+			border: none;
+		}
+
+			#sidebar.contracted header h1, #sidebar.contracted header a {
+				display: none;
+			}
+
+			#sidebar.contracted header img {
+				margin-bottom: 0;
+			}
+
+		#sidebar.contracted ul {
+			display: none;
+		}
+
+		#sidebar.contracted .resume {
+			color: #cdcdd0;
+			display: block;
+			width: 500px;
+			top: 545px;
+			-webkit-transform-origin: 0 0;
+			-moz-transform-origin: 0 0;
+			transform-origin: 0 0;
+			-webkit-transform: rotate(-90deg);
+			-moz-transform: rotate(-90deg);
+			-transform: rotate(-90deg);
+			position: absolute;
+			padding: 14px 13px 17px 0;
+			text-align: right;
+			border-right: 1px solid rgba(255,255,255,.1);
+			cursor: pointer;
+		}
+
+			#sidebar.contracted .resume span.category {
+				color: #FFF;
+				font-family: 'latobold', sans-serif;
+			}
+
+				#sidebar.contracted .resume span.category:after {
+					content: "·";
+					display: inline-block;
+					margin: 0 5px;
+				}
+
+			#sidebar.contracted .resume span.criteria {
+				font-family: 'latobold';
+			}
+
+		#sidebar.contracted .concealable {
+			display: none;
+		}
+
+		#sidebar.contracted footer .links {
+			text-align: center;
+		}
+
+		#sidebar.contracted footer .links a:last-child {
+			float: none;
+			display: inline-block;
+		}
+
+#legend {
+	position: fixed;
+	left: 240px;
+	bottom: 20px;
+	width: 175px;
+
+	background-color: #fff;
+	color: #42444e;
+	font-size: 0.8em;
+
+	box-shadow: 0 0 1px 0 rgba(0,0,0,.5);
+}
+
+	#sidebar.contracted + #legend {
+		left: 70px;
+	}
+
+	#legend h3 {
+		padding: 12px;
+		border-bottom: 1px solid #80818a;
+		cursor: pointer;
+	}
+
+	#legend ul {
+
+	}
+
+		#legend ul li {
+			padding: 6px 12px;
+			border-bottom: 1px solid rgba(128,129,138, .2);
+		}
+
+			#legend ul li:last-child {
+				border-bottom: none;
+			}
+
+			#legend ul li:before {
+				content: "";
+				display: inline-block;
+				width: 10px;
+				height: 10px;
+				margin-right: 10px;
+				border-radius: 10px;
+				background-color: #42444e;
+			}
+
+				#legend ul li.blue1:before {
+					background-color: #0000ff;
+				}
+
+				#legend ul li.blue2:before {
+					background-color: #005eff;
+				}
+
+				#legend ul li.blue3:before {
+					background-color: #00c3ff;
+				}
+
+				#legend ul li.green1:before {
+					background-color: #00ff7d;
+				}
+
+				#legend ul li.green2:before {
+					background-color: #5eff00;
+				}
+
+				#legend ul li.yellow1:before {
+					background-color: #fff200;
+				}
+
+				#legend ul li.orange1:before {
+					background-color: #ffb500;
+				}
+
+				#legend ul li.orange2:before {
+					background-color: #ff7800;
+				}
+
+				#legend ul li.orange3:before {
+					background-color: #ff3a00;
+				}
+
+				#legend ul li.red1:before {
+					background-color: #ff0000;
+				}
+
+	#legend .slider {
+		font-size: 8pt;
+		padding: 12px;
+		background-color: rgba(129,128,138, .2);
+		border-top: 1px solid #80818a;
+	}
+
+		#legend .slider label {
+			margin-right: 10px;
+		}
+
+		#legend .slider input[type='range'] {
+			-webkit-appearance: none;
+			border-radius: 2px;
+			background-color: #80818a;
+			height: 4px;
+			width: 100px;
+			vertical-align: middle;
+			outline: none;
+		}
+		
+		#legend .slider input[type='range']::-moz-range-track {
+			-moz-appearance: none;
+			border-radius: 2px;
+			background-color: #80818a;
+			height: 4px;
+		}
+
+		#legend .slider input[type='range']::-webkit-slider-thumb {
+			-webkit-appearance: none !important;
+			border-radius: 10px;
+			background-color: #f3f3f4;
+			border: 1px solid #80818a;
+			height: 12px;
+			width: 12px;
+		}
+
+		#legend .slider input[type='range']::-moz-range-thumb {
+			-moz-appearance: none;
+			border-radius: 10px;
+			background-color: #f3f3f4;
+			border: 1px solid #80818a;
+			height: 12px;
+			width: 12px;
+		}
+
+	#legend.contracted ul, #legend.contracted .slider {
+		display: none;
+	}
+
+#credits {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+
+	padding: 8px;
+
+	background-color: #fff;
+	color: #42444e;
+	box-shadow: 0 0 1px 0 rgba(0,0,0,.5);
+
+	font-size: 0.7em;
+	text-align: right;
+}
+
+	#credits span {
+		margin-right: 9px;
+	}
+
+		#credits span:last-child {
+			margin-right: 0;
+		}
+
+	#credits a {
+		color: #3399cc;
+		margin-right: 9px;
+	}
+
+		#credits a:last-child {
+			margin-right: 0;
+		}
+
+
+@media (max-width: 1110px) {
+	#legend {
+		bottom: 40px;
+	}
+}
+
+@media (max-width: 920px) {
+	#sidebar footer {
+		bottom: 28px;
+	}
+
+	#credits {
+		width: 100%;
+	}
+}
