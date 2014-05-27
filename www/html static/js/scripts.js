@@ -20,7 +20,7 @@ $('header a').click(function(e){
 });
 
 $('#sidebar nav .resume').click(expandSidebar);
-$('#sidebar header > img').click(expandSidebar);
+$('#sidebar header .expand_btn').click(expandSidebar);
 
 $('#legend h3').click(function(e){
 	e.preventDefault();

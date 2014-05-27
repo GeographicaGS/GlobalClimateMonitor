@@ -128,11 +128,36 @@ span.light {
 		border-bottom: 1px solid rgba(41,43,52, .2);
 	}
 
-		#sidebar header > img {
-			display: block;
-			width: 55px;
-			margin-bottom: 10px;
+		#sidebar header .logo_container {
+			position: relative;
 		}
+
+			#sidebar header .logo_container .logo {
+				opacity: 1;
+				display: block;
+				width: 55px;
+				margin-bottom: 10px;
+				transition: opacity .3s ease;
+			}
+
+				#sidebar.contracted header .logo_container:hover .logo {
+					opacity: 0;
+					cursor: pointer;
+				}
+
+			#sidebar header .logo_container img.expand_btn {
+				opacity: 0;
+				position: absolute;
+				top: 0;
+				left: 3px;
+				width: auto;
+				transition: opacity .3s ease;
+			}
+
+				#sidebar.contracted header .logo_container:hover .expand_btn {
+					opacity: 1;
+					cursor: pointer;
+				}
 
 		#sidebar header a:last-child {
 			position: absolute;
@@ -289,8 +314,8 @@ span.light {
 		#sidebar.contracted .resume {
 			color: #cdcdd0;
 			display: block;
-			width: 500px;
-			top: 545px;
+			width: 610px;
+			top: 655px;
 			-webkit-transform-origin: 0 0;
 			-moz-transform-origin: 0 0;
 			transform-origin: 0 0;
