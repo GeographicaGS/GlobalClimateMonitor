@@ -1,0 +1,6 @@
+[submodule "www/webgl-globe"]
+	path = www/webgl-globe
+	url = https://github.com/dataarts/webgl-globe.git
+[submodule "www/globe/webgl-globe"]
+	path = www/globe/webgl-globe
+	url = https://github.com/dataarts/webgl-globe.git

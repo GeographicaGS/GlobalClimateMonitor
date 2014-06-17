@@ -3,6 +3,7 @@ app = Flask(__name__)
 app.config.update(
     DEBUG=True
 )
+import precipitation
 
 @app.route('/', methods = ['GET'])                                            
 def alive():
