@@ -87,12 +87,14 @@
 									<option value="Monthly precipitation">Monthly precipitation</option>
 									<option value="Monthly precipitation anomalies">Monthly precipitation anomalies</option>
 									<option value="Monthly precipitation anomalies p">Monthly relative precipitation anomalies (%)</option>
+									<option disabled>──────────</option>
 									<option value="Monthly temperature">Monthly temperature</option>
 									<option value="Monthly temperature anomalies">Monthly temperature anomalies</option>
 									<option value="Monthly minimum temperature">Monthly minimum temperature</option>
 									<option value="Monthly minimum temperature anomalies">Monthly minimum temperature anomalies</option>
 									<option value="Monthly maximum temperature">Monthly maximum temperature</option>
 									<option value="Monthly maximum temperature anomalies">Monthly maximum temperature anomalies</option>
+									<option disabled>──────────</option>
 									<option value="Monthly etp">Monthly potential evapotranspiration</option>
 									<option value="Monthly etp anomalies">Monthly potential evapotranspiration anomalies</option>
 									<option value="Monthly etp anomalies p">Monthly relative potential evapotranspiration anomalies (%)</option>
@@ -232,19 +234,22 @@
 					<div id="dialog2" class="controls">
 						<select id="annuals" onfocus="UpdateFilter_a(this);this.oldvalue = this.value;" onchange="UpdateFilter_a(this);this.oldvalue = this.value;">
 									<option value="Seasonality Index">Seasonality Index</option>
+									<option disabled>──────────</option>
 									<option value="Annual precipitation">Annual precipitation</option>
 									<option value="Annual precipitation anomalies">Annual precipitation anomalies</option>
+									<option disabled>──────────</option>
 									<option value="Annual mean temperature">Annual mean temperature</option>
 									<option value="Annual mean temperature anomalies">Annual mean temperature anomalies</option>
 									<option value="Annual minimum temperature">Annual minimum temperature</option>
 									<option value="Annual minimum temperature anomalies">Annual minimum temperature anomalies</option>
 									<option value="Annual maximum temperature">Annual maximum temperature</option>
 									<option value="Annual maximum temperature anomalies">Annual maximum temperature anomalies</option>
+									<option disabled>──────────</option>
 									<option value="Annual etp">Annual etp</option>
 									<option value="Annual etp anomalies">Annual etp anomalies</option>
 						</select>
 						<select id="mes_a"> 
-									<option value="">-</option>						
+									<option disabled>─</option>				
 						</select>
 						<select id="agno_a" onfocus="UpdateFilter_a();" onchange="UpdateFilter_a();">
 									<option value="1901" selected="selected">1901</option>
@@ -367,9 +372,11 @@
 					<div id="dialog3" class="controls">
 						<select id="normals" onfocus="this.oldvalue = this.value; UpdateFilter_n(this);this.oldvalue = this.value;" onchange="UpdateFilter_n(this);this.oldvalue = this.value;">
 									<option value="Monthly precipitation normals">Monthly precipitation</option>
+									<option disabled>──────────</option>
 									<option value="Monthly temperature normals">Monthly temperature</option>
 									<option value="Monthly minimum temperature normals">Monthly minimum temperature</option>
 									<option value="Monthly maximum temperature normals">Monthly maximum temperature</option>
+									<option disabled>──────────</option>
 									<option value="Monthly etp normals">Monthly potential evapotranspiration</option>
 						</select>
 						<select id="mes_n" onfocus="UpdateFilter_n();" onchange="UpdateFilter_n();">

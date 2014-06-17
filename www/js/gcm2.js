@@ -268,7 +268,6 @@ function init() {
 }  
 
 			function UpdateFilterfirst() {
-
                 if(pureCoverage)
                   return;
 				var capa = indicador.value
@@ -288,7 +287,7 @@ function init() {
 				vlayer.setVisibility(true);
          	}
 			function UpdateFilter() {
-
+window.stop();
                 if(pureCoverage)
                   return;
 				var oldind;
@@ -345,7 +344,7 @@ function init() {
 				indst.setVisibility(false);
          	}
 			function UpdateFilter_a() {
-
+window.stop();
                 if(pureCoverage)
                   return;
 				var oldind;
@@ -401,7 +400,7 @@ function init() {
 				indst.setVisibility(false);
          	}
 			function UpdateFilter_n() {
-
+window.stop();
                 if(pureCoverage)
                   return;
 				var old_n;
