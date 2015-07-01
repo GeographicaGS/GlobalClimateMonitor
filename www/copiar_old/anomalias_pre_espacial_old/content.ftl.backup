@@ -1,0 +1,31 @@
+<#--
+Body section of the GetFeatureInfo template, it's provided with one feature collection, and
+will be called multiple times if there are various feature collections
+-->
+<div class="feature_info">
+	<h5>Monthly Global Precipitation Anomalies</h5>
+ <table>
+ <#list features as feature>
+
+	<tr>
+		<th>Date</th>
+		<th>Anomaly</th>
+	</tr>
+ 	 <tr>
+	 			<td width='60%' height='10' >
+	  <p align='left'>Date:</p>
+      </td>
+      <td width='60%' height='10' ><p align='left' id="resaltado2">${feature.mes.value}/${feature.agno.value}</p>
+      </td>
+     </tr>	
+ 	 <tr>
+			<td width='60%' height='10' >
+	  <p align='left'>Anomaly value:</p>
+      </td>
+      <td width='60%' height='10' ><p align='left' id="resaltado2">${feature.anomalia.value} mm.</p>
+      </td>
+     </tr>	
+
+</#list>
+</table>	 
+</div>

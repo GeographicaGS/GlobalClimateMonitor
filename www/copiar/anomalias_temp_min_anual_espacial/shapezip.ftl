@@ -1,0 +1,3 @@
+zip=Annual_minimum_temperature_anomalies
+shp=Annual_minimum_temperature_anomalies
+txt=wfsrequest

@@ -1,0 +1,3 @@
+zip=Monthly_temperature_normals
+shp=Monthly_temperature_normals
+txt=wfsrequest

@@ -1,0 +1,3 @@
+zip=Monthly_PET_anomalies_percent
+shp=Monthly_PET_anomalies_percent
+txt=wfsrequest

@@ -1,0 +1,3 @@
+zip=Monthly_temperature_anomalies
+shp=Monthly_temperature_anomalies
+txt=wfsrequest

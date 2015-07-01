@@ -21,3 +21,8 @@ def precipitation_annual(years):
 		response.append([ str(y),year_pre])
 
 	return jsonify({ "results" :  response })
+
+
+@app.route('/precipitation_annual_complete/<int:year>', methods = ['GET'])
+def precipitation_annual_complete(year):
+        return jsonify({ "results" :  PrecipitationModel().getAnnualPrecipitationComplete(year) })

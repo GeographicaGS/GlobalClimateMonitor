@@ -1,0 +1,7 @@
+<layout>
+                <decoration type="image" affinity="bottom,left" offset="50,50">
+                        <option name="url" value="http://www.globalclimatemonitor.org/img/prem.png" opacity="40"/>
+                </decoration>
+
+                <decoration type="scaleline" affinity="bottom,right" offset="50,120"/>
+</layout>

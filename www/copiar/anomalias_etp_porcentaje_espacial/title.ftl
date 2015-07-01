@@ -1,0 +1,1 @@
+Monthly relative PET anomaly %

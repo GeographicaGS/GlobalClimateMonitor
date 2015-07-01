@@ -1,0 +1,3 @@
+zip=Maximum_Temperature_Trends
+shp=Maximum_Temperature_Trends
+txt=wfsrequest

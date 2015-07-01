@@ -1,0 +1,34 @@
+#tools {
+position: absolute;
+width: 50px;
+height: 500px;
+top: 150px;
+right: 0.6em;
+padding: 3px;
+border-radius: 4px;
+color: #fff;
+background: rgba(165, 193, 208, 0.6);
+z-index: 1100;
+
+}
+#lista_capas {
+	z-index: 1100;
+	display:none;
+
+}
+
+
+#tools h3 {
+	width: 320px;
+	text-align: center;
+	color: rgb(20, 20, 20);
+	font-family: calibri;
+	cursor: pointer;
+	background: url("../../img/GCV_icon_leyenda_desplegar.svg") no-repeat center right 10px;
+}
+#tools h3.contracted{
+	background: url("../../img/GCV_icon_leyenda_plegar.svg") no-repeat center right 10px;
+}
+#tools.contracted ul, #tools.contracted .slider {
+	display: none;
+}

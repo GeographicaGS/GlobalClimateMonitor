@@ -182,21 +182,21 @@ div.olControlMousePosition {
 .olControlNavigationHistory {
    background-image: url("img/navigation_history.png");
    background-repeat: no-repeat;
-   width:  24px;
-   height: 24px;
+   width:  36px;
+   height: 36px;
 
 }
 .olControlNavigationHistoryPreviousItemActive {
-  background-position: 0 0;
+  background-position: 0px -36px;
 }
 .olControlNavigationHistoryPreviousItemInactive {
-   background-position: 0 -24px;
+   background-position: 0px 0px;
 }
 .olControlNavigationHistoryNextItemActive {
-   background-position: -24px 0;
+   background-position: -36px -36px;
 }
 .olControlNavigationHistoryNextItemInactive {
-   background-position: -24px -24px;
+   background-position: -36px 0px;
 }
 
 /*div.olControlSaveFeaturesItemActive {

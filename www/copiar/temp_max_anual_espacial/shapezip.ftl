@@ -1,0 +1,3 @@
+zip=Annual_maximum_temperature
+shp=Annual_maximum_temperature
+txt=wfsrequest

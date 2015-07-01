@@ -1,0 +1,1 @@
+Annual mean temperature

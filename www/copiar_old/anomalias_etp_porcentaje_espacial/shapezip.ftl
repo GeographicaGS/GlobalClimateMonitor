@@ -1,0 +1,3 @@
+zip=Monthly_etp_anomalies_percent
+shp=Monthly_etp_anomalies_percent
+txt=wfsrequest

@@ -1,0 +1,1 @@
+Monthly normal temperature

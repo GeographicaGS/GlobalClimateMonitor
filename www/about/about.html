@@ -1,0 +1,365 @@
+<script>
+    $(function () {
+        var maxChars = 310;
+        var ellipsis = "...";
+
+        var text = $(this).find(".text.full").text();
+        var html = $(this).find(".text.full").html();
+        if (text.length > maxChars)
+        {
+            var shortHtml = html.substring(0, maxChars - 3) + "<span class='ellipsis'>" + ellipsis + "</span>";
+            $(this).find(".text.short").html(shortHtml + '<span class="read-more">Read more</span>');
+        }
+
+        $("body").on('click', '.read-more', function () {
+            var readMoreText = "Read more";
+            var readLessText = "Read less";
+            var $shortElem = $('body').find(".text.short");
+            var $fullElem = $('body').find(".text.full");
+
+            if ($shortElem.is(":visible"))
+            {
+                $shortElem.hide();
+                $fullElem.show();
+                $(this).text(readLessText);
+            }
+            else
+            {
+                $shortElem.show();
+                $fullElem.hide();
+                $(this).text(readMoreText);
+            }
+            $.fancybox.update();
+        });
+    });
+</script>
+</head>
+<body style="background-color: #ffffff; max-height: 700px; overflow-y: auto">
+    <div id="about-and-contact-content">
+        <header style="padding-top: 15px">
+            <div class="logo_container-about">
+                <img height="51" src="/img/GCV_simbolo_proyecto_color.svg" class="logo"/>
+            </div>
+            <div class="header-about">
+                <!-- <img src="img/GCV_simbolo_proyecto.svg"> -->
+                <h1>Global Climate Monitor</h1>
+                <!-- <i><font color="yellow">Getting Knowledge from data</font></i> -->
+                <h2>A Tool to Handle Global Climate Data</h2>
+                <br>
+                <h3>
+                    Global Climate Monitor is a global climate web viewer 
+                    containing accesible climatic information from 1901. It is a 
+                    project developed by the University of Seville Climate 
+                    Research Group.
+                </h3>
+            </div>  
+            <div class="clear" style="height: 26px;"></div>
+        </header>
+        <div class="text short"></div>
+        <div class="text full">
+            <p class="about-entradilla"><em>Global Climate Monitor</em> is supported in the design of a data model and a tool to geo-visualize global 
+                climate data and climate-environmental indicators. The latter are derived calculations or statistics
+                that are easy to understand and capable of explaining weather patterns on a global scale to any 
+                potential user, within or outside the scientific community. It therefore falls in the area of ​​Open 
+                Knowledge, as its primary objective is to make complex data easily available.</p></br>
+
+            <p class="about-entradilla">The data currently available in the geo- viewer comes from multiple sources. TS3.21 version of the CRU database produced
+			by the Climate Research Unit (University of East Anglia) provides precipitation and temperature data from January 1901 to December 
+                2012. It offers data on a monthly basis and with a spatial resolution of half a degree in latitude and longitude. From january 2013 until present,
+				data sources are the Global Precipitation Climatology Centre (GPCC) for precipitation and the Global Historical Climatology Network-Monthly (GHCN-M) version 3.2.1
+				for global mean temperature.</p></br>
+
+            <p class="about-entradilla">At the same time, a set of derivative indicators from that database are displayed, offered at monthly, 
+                seasonal and annual scale:</p></br>            
+
+            <p class="about-entradilla-bold">Variables & indicators that are presented in the first version of the GCM</p>
+
+            <div class="about-table-border"></div>
+
+            <div class="about-table">
+                <div class="about-table-header-row">
+                    <div class="about-table-cell">
+                        TIME SCALE
+                    </div>
+                    <div class="about-table-cell">
+                        TEMPERATURE
+                    </div>
+                    <div class="about-table-cell">
+                        PRECIPITATION
+                    </div>
+                    <div class="about-table-cell">
+                        EVAPOTRANSPIRATION
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="about-table-row">
+                    <div class="about-table-cell">
+                        Monthly
+                    </div>
+                    <div class="about-table-cell">
+                        <ul>
+                            <li>
+                                Mean temperature
+                            </li>
+                            <li>
+                                Mean temperature anomalies
+                            </li>
+                            <li>
+                                Mean minimum temperature
+                            </li>
+                            <li>
+                                Mean minimum temperature anomalies
+                            </li>
+                            <li>
+                                Mean maximum temperature                              
+                            </li>
+                            <li>
+                                Mean maximum temperature anomalies
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="about-table-cell">
+                        <ul>
+                            <li>
+                                Total precipitation
+                            </li>
+                            <li>
+                                Precipitation anomalies
+                            </li>
+                            <li>
+                                Precipitation anomalies in percentages 
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="about-table-cell">
+                        <ul>
+                            <li>
+                                Total potential evapotranspiration
+                            </li>
+                            <li>
+                                Potential evapotranspiration anomalies
+                            </li>
+                            <li>
+                                Potential evapotranspiration anomalies in percentages
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="about-table-row">
+                    <div class="about-table-cell">
+                        Annual
+                    </div>
+                    <div class="about-table-cell">
+                        <ul>
+                            <li>
+                                Mean temperature
+                            </li>
+                            <li>
+                                Mean temperature anomalies
+                            </li>
+                            <li>
+                                Mean minimum temperature
+                            </li>
+                            <li>
+                                Mean minimum temperature anomalies
+                            </li>
+                            <li>
+                                Mean maximum temperature                              
+                            </li>
+                            <li>
+                                Mean maximum temperature anomalies
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="about-table-cell">
+                        <ul>
+                            <li>
+                                Total precipitation
+                            </li>
+                            <li>
+                                Precipitation anomalies
+                            </li>
+                            <li>
+                                Precipitation anomalies in percentages 
+                            </li>
+                            <li>
+                                Seasonality index
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="about-table-cell">
+                        <ul>
+                            <li>
+                                Total potential evapotranspiration
+                            </li>
+                            <li>
+                                Potential evapotranspiration anomalies
+                            </li>
+                            <li>
+                                Potential evapotranspiration anomalies in percentages
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="about-table-row">
+                    <div class="about-table-cell">
+                        Monthly and Annual Normals
+                    </div>
+                    <div class="about-table-cell">
+                        <ul>
+                            <li>
+                                Mean temperature
+                            </li>
+                            <li>
+                                Mean minimum temperature
+                            </li>
+                            <li>
+                                Mean maximum temperature                              
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="about-table-cell">
+                        <ul>
+                            <li>
+                                Total precipitation
+                            </li>
+                            <li>
+                                Precipitation anomalies
+                            </li>
+                            <li>
+                                Precipitation anomalies in percentages 
+                            </li>
+                            <li>
+                                Seasonality index
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="about-table-cell">
+                        <ul>
+                            <li>
+                                Total potential evapotranspiration
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear"></div>
+                <div class="about-table-row">
+                    <div class="about-table-cell">
+                        Trends
+                    </div>
+                    <div class="about-table-cell">
+                        <ul>
+                            <li>
+                                Mean temperature trends
+                            </li>
+                            <li>
+                                Mean minimum temperature trends
+                            </li>
+                            <li>
+                                Mean maximum temperature trends
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="about-table-cell">
+                        <ul>
+                            <li>
+                                Total precipitation trends
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="about-table-cell">
+                        <ul>
+                            <li>
+                                Total potential evapotranspiration trends
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <br>
+            <p class="asterisk">*The names in capital are used for the original variables that were served by the Climate Research Unit. Source: Own elaboration.</p>
+
+            <br>
+            <h4>System architecture </h4>
+            <br>
+            <p>All the applications used to create Global Climate Monitor are open source. The system is based on a 
+                multilevel architecture in three layers as follows:</p><br>
+
+            <p>1. Data layer: This layer is the warehouse of the data used by the system. The original database is 
+                served in NetCDF by the CRU, which is extracted to text files using the software R. The data server 
+                system has a main core component comprising a PostgreSQL relational database server (version 9.2) 
+                and its spatial extension PostGIS (version 2.0) for point geometry management.  PostgreSQL handles 
+                tables with over 90 million records, which shows its great capacity. At a second level, the system has a 
+                file server working under the Linux operating system that controls the plain-text files deriving from 
+                the netCDF climate data extraction.</p><br>
+
+            <p><img align="center" src="/img/system_architecture.png"/></p><br>
+
+            <p>2. Business layer: This level functions from the data warehouse to the customer and is supported by 
+                two main components: a map server and a web server. GeoServer (version 2.5) is selected to handle 
+                the transactions between the database server and the clients through WMS interoperable services. 
+                GeoServer v.2.5 obtains data for specified periods and serve them as interoperable services. The 
+                points that configure the 0.5 × 0.5 grid in the dataset are displayed with proportionally sized symbols 
+                and using also colour ramps. This semiotics provides global coverage so that is really easy to extract a 
+                meaning and discover weather patterns.</p><br>
+
+            <p>In addition, NGINX (version 1.1.19) is the web server that integrates the standards for the web 
+                content definition. The latter was chosen because it is the best in terms of the number of requests per 
+                second that it can serve and because of its memory usage.</p><br>
+
+            <p>3. Client (geo-viewer): The user layer is the visible component of the system. This level is the viewer 
+                itself, which is accessible at the following URL: http://www.globalclimatemonitor.org. This viewer was 
+                designed and adapted for our project using the JavaScript code libraries that were developed for the 
+                OpenLayer project (version 2.13.1) as an effective scripting language for online mapping.</p><br>
+
+            <p>The display consists of a single html page with a main map area and a collapsible menu on the left: the 
+                layer switcher. The layer switcher shows the variables and indicators organized into four categories: 
+                monthly, annual, normals ​​and trends. When the user selects a variable and a temporal scale or period, 
+                the map and the legend are automatically updated.</p><br>
+
+            <p>The collapsible legend is at the bottom left of the main map area.</p><br>
+
+            <p>In the top right, users can find basic tools to zoom and to move over the map, as well as two 
+                information buttons: the top button is used to obtain information on the value of the variable at the 
+                point clicked and the other shows an overview of the variable currently displayed on the screen. The 
+                information always appears in a popup window.</p><br>
+
+            <p>The user can choose between different base layers using another layer selector placed on top of the 
+                map: Google, OpenStreetMap or a simple white background with administrative borders. On its left, 
+                there is a tab that displays the geographic coordinates of the mouse location, as it is moved over the
+                map.</p><br>
+
+            <p>General information about the data source, license and contact is shown at the bottom of the map area.</p><br>
+        </div>
+
+        <div class="authors">
+            <h4>Authors</h4>
+            <br>
+            <p><a STYLE="border: none" href="http://grupo.us.es/climatemonitor/members" target="_blank">Dr. Juan Mariano Camarillo Naranjo</a><br>
+                <a href="mailto:jmcamarillo@us.es">jmcamarillo@us.es</a></p><br>
+            <p><a STYLE="border: none" href="http://grupo.us.es/climatemonitor/members" target="_blank">Dr. Natalia Rodríguez Limones<br>
+                <a href="mailto:ntalialr@us.es">ntalialr@us.es</a></p><br>
+            <p><a STYLE="border: none"  href="http://grupo.us.es/climatemonitor/members" target="_blank">José Ignacio Alvarez Francoso<br>
+                <a href="mailto:jalvarez2@us.es">jalvarez2@us.es</a></p><br>
+            <p><a STYLE="border: none"  href="http://www.geographica.gs" target="_blank">Geographica<br>
+                <a href="mailto:info@geographica.gs">info@geographica.gs</a></p><br>
+            <br>
+        </div>
+        <h4>Contact</h4>
+        <br>
+        <div class="about-contact-left-column">
+            <p><strong>Climate Research Group</strong><br>University of Sevilla</p><br>
+            <p>T  (34) 954 55 43 55<br>
+                (34) 954 55 69 88</p><br>
+            <p>María de Padilla s/n<br>41003 Sevilla (Spain)</p><br>
+        </div>
+        <div class="about-contact-right-column">
+            <p>Web: <a href="http://grupo.us.es/climatemonitor/" target="_blank">http://grupo.us.es/climatemonitor/</a><p/><br>
+            <p>Email: <a href="mailto:globalclimatemonitor@us.es" target="_blank">globalclimatemonitor@us.es</a><p/><br>
+            <p style="margin-top: 18px"><img src="/img/us.png"/>
+                <img style="margin-left:20px" src="/img/grey_logo.png"/></p>
+        </div>
+    </div>

@@ -1,0 +1,3 @@
+zip=Annual_minimum_temperature
+shp=Annual_minimum_temperature
+txt=wfsrequest

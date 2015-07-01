@@ -1,0 +1,3 @@
+zip=Annual_rainfall_anomalies
+shp=Annual_rainfall_anomalies
+txt=wfsrequest

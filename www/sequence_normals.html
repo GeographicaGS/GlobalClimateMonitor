@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+		<meta name="baidu-site-verification" content="3Rxl94DeFE"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=768"/>
+		<meta name="description" content="Global Climate Monitor and Viewer. Climate monitoring. Data download"/>
+        <meta name="author" content="Juan Mariano Camarillo Naranjo, José Ignacio Álvarez Francoso, Natalia Limones Rodríguez, Geographica"/>
+        <link rel="shortcut icon" href="img/favicon.png"/>
+		<script src="../js/jquery-1.9.1.js"></script>
+
+        <title>Global Climate Monitor</title>
+
+        <link rel="stylesheet" href="css/reset.css"/>
+        <link rel="stylesheet" href="css/base.css"/>
+        <link rel="stylesheet" href="css/main.css"/>
+
+
+        <link rel="stylesheet" href="fancybox/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+        <script type="text/javascript" src="fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+    </head>
+    <body onload="loadSequence(); updateLegend();">
+        <div id="map2"> <!-- INSERTE AQUÍ EL MAPA  --> 
+				<noscript>
+					<h3>Welcome to Globalclimatemonitor.org</h3>
+					<p>We're sorry, but our site requires Javascript.</p>
+					<p><a style="color: blue; text-decoration: underline" href="http://www.activatejavascript.org/">Here</a> you will find instructions on how to enable Javascript in your browser.</p>
+				</noscript>	
+			<div id="loadmessage">Loaded data. Images loaded:12</div>
+			
+			<div id="momento">Jan-Dec/1901-1930</div>
+						
+			<div id="container">
+			<img src="../images/gcm/pre_normales_espacial_old_1930_1.png" style="z-index: 12;">
+			<img src="../images/gcm/pre_normales_espacial_old_1930_2.png" style="z-index: 11;">
+			<img src="../images/gcm/pre_normales_espacial_old_1930_3.png" style="z-index: 10;">
+			<img src="../images/gcm/pre_normales_espacial_old_1930_4.png" style="z-index: 9;">
+			<img src="../images/gcm/pre_normales_espacial_old_1930_5.png" style="z-index: 8;">
+			<img src="../images/gcm/pre_normales_espacial_old_1930_6.png" style="z-index: 7;">
+			<img src="../images/gcm/pre_normales_espacial_old_1930_7.png" style="z-index: 6;">
+			<img src="../images/gcm/pre_normales_espacial_old_1930_8.png" style="z-index: 5;">
+			<img src="../images/gcm/pre_normales_espacial_old_1930_9.png" style="z-index: 4;">
+			<img src="../images/gcm/pre_normales_espacial_old_1930_10.png" style="z-index: 3;">
+			<img src="../images/gcm/pre_normales_espacial_old_1930_11.png" style="z-index: 2;">
+			<img src="../images/gcm/pre_normales_espacial_old_1930_12.png" style="z-index: 1;">
+			</div>				
+            <aside id="legend2">
+                <h3>Legend</h3>
+                <div id="leyendacapa" class="content" style="padding-left: 60px;padding-top: 10px;padding-bottom: 10px;">
+				<img src='/geoserver/gcm/wms?service=WMS&version=1.3.0&request=getlegendgraphic&layer=pre_normales_espacial_old&format=image/png&style=&width=12&height=12'/>
+				</div>
+            </aside>		
+            <footer id="credits2">
+                <span>
+                    <b>Data source:</b> <a href="http://catalogue.ceda.ac.uk/uuid/3f8944800cc48e1cbc29a5ee12d8542d" target="_blank">CRU TS 3.21,</a>@Climatic Research Unit, University of East Anglia,
+				</span>
+                <span>
+                    made available under the <a href="http://opendatacommons.org/licenses/odbl/1.0/" target="_blank">Open Database License</a>
+                </span>
+            </footer>
+        </div>
+        <div id="sidebar">
+
+            <header>
+                <div class="logo_container">
+                    <img src="img/GCV_simbolo_proyecto_color.svg" class="logo">
+                </div>
+                <!-- <img src="img/GCV_simbolo_proyecto.svg"> -->
+                <h1>Global Climate <span>Monitor</span></h1>
+                <!-- <i><font color="yellow">Getting Knowledge from data</font></i> -->
+                <h4 >Getting Knowledge from data</h4>
+            </header>
+            <nav>
+                <ul>
+                    <li class="expanded">
+                        <h2><span>Run</span> Sequence of normals</h2>
+                        <div id="dialog_animation" class="controls">
+                            <select id="variable" onchange="loadSequence(); updateLegend();">
+								<option value="pre_normales_espacial_old" selected>Monthly rainfall normal</option>
+                                <option value="temp_normales_espacial_old">Monthly temperature normal</option>
+								<option value="temp_min_normales_espacial_old">Monthly minimum temperature normal</option>
+								<option value="temp_max_normales_espacial_old">Monthly maximum temperature normal</option>
+								<option value="etp_normales_espacial_old">Monthly pet normal</option>
+							</select>
+                            <select id="month" onchange="loadSequence();">
+                                <option value="1" selected>January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>                        
+                            </select>
+                            <select id="period" onchange="loadSequence();">
+                                <option value="1930" selected>1901-1930</option>
+                                <option value="1940">1911-1940</option>
+                                <option value="1950">1921-1950</option>
+                                <option value="1960">1931-1960</option>
+                                <option value="1970">1941-1970</option>
+                                <option value="1980">1951-1980</option>
+                                <option value="1990">1961-1990</option>
+                                <option value="2000">1971-2000</option>                        
+                            </select>
+                        </div>
+                    </li>
+					<li>
+						<button id="start" title="Click to start animation" onclick="loadSequence(); runSequence();">Start animation</button>
+                    </li>
+					<li>
+<!--						<form>
+							<label id="speed" for="slider_speed" title="Change before starting animation. The more to the right, the faster it will run">Speed</label>
+							<input name="flevel" id="slider_speed" type="range" min="1" max="100" value="0">
+						</form>-->
+                    </li>
+                    <li class="about-and-contact-li">
+                        <a id="about-and-contact" href="#" ><h2>About <span>and</span> Contact</h2></a>
+                    </li>
+                    <li class="news-li">
+                        <a id="news" href="#"><h2>GCM News</h2></a>
+                    </li>								
+                </ul>
+                <p class="resume"><span class="category"><span class="light">By</span> Monthly values</span><span class="criteria">Monthly temperature</span> August 1930</p>
+            </nav>
+
+            <footer>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Optimized for Chrome, Firefox
+				<br>
+				<br>
+                <div style="position: relative">
+                    <div class="position: absolute">
+                        <a class="logo" style="padding-left: 10%;width:50px;height:50px;display:initial" href="http://grupo.us.es/climatemonitor/" target="_blank"><img src="img/logo_grupo.png"></a>
+                    </div>
+                    <div style="position: absolute;top: 10px;left: 70px;"><p><strong>Climate Research</strong><br> Group</p><br></div>
+                </div>
+                
+                <div class="links">
+                    <a href="http://www.us.es/" target="_blank" class="concealable">University of Seville</a>
+                    <a href="http://www.geographica.gs/#!/en/home" target="_blank"><span class="concealable">Geographica </span><img src="img/logo_geographica.svg"></a>
+                </div>
+            </footer>
+        </div>
+
+        <script src="js/sequence_normals.js"></script>
+        <script>
+                                (function (i, s, o, g, r, a, m) {
+                                    i['GoogleAnalyticsObject'] = r;
+                                    i[r] = i[r] || function () {
+                                        (i[r].q = i[r].q || []).push(arguments)
+                                    }, i[r].l = 1 * new Date();
+                                    a = s.createElement(o),
+                                            m = s.getElementsByTagName(o)[0];
+                                    a.async = 1;
+                                    a.src = g;
+                                    m.parentNode.insertBefore(a, m)
+                                })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+                                ga('create', 'UA-9148278-60', 'globalclimatemonitor.org');
+                                ga('send', 'pageview');
+        </script>
+    </body>
+</html>

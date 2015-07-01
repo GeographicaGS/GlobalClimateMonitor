@@ -1,0 +1,3 @@
+zip=Monthly_maximum_temperature
+shp=Monthly_maximum_temperature
+txt=wfsrequest

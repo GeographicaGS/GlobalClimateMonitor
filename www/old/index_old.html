@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=768">
+        <meta name="description" content="Global Climate Monitor and Viewer">
+        <meta name="author" content="">
+        <style type="text/css">
+            #map { 
+                position:absolute;
+                top:0;
+                left:220px;
+                width: 100%; 
+                height: 100%; 
+            }
+        </style>        
+        <link rel="shortcut icon" href="img/favicon.png"/>
+
+        <title>Global Climate Monitor</title>
+
+        <link rel="stylesheet" href="css/reset.css"/>
+        <link rel="stylesheet" href="css/base.css"/>
+        <link rel="stylesheet" href="css/main.css"/>
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+        <link rel="stylesheet" href="fancybox/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
+        <script type="text/javascript" src="fancybox/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+    </head>
+    <body onload="init();
+            UpdateFilterfirst();">
+        <div id="map"> <!-- INSERTE AQUÍ EL MAPA  --> 
+
+            <a id="ctrl_info_ctrl" href="#" class="" title="Click on a point to get value"></a>
+            <a id="ctrl_info_capa_ctrl" href="#" class="" title="Click to get layer info"></a>
+			<a id="ctrl_change_viewer" href="#" class="" title="Click to launch viewer in WGS84"></a>
+            <select id="layer_switcher" title="Change base layer">			
+                <option value="osm">OpenStreetMap</option>
+                <option value="world_limits" selected>White background with borders</option>
+                <option value="gmap">Google Streets</option>
+				<option value="gsat">Google Satellite</option>
+				<option value="ghyb">Google Hybrid</option>
+				<option value="gter">Google Terrain</option>
+
+            </select>
+            <aside id="legend">
+                <h3>Legend</h3>
+                <div id="leyendacapa" class="content" style="padding-left: 60px;padding-top: 10px;padding-bottom: 10px;"></div>
+                <div id="slider" class="slider">
+                    <form oninput="level.value = flevel.valueAsNumber">
+                        <label for="slider_opacity">Transparency</label>
+                        <input name="flevel" id="slider_opacity" type="range" min="0" max="100" value="25" onchange="updateTransparency(this.value)"> 
+                        <output for="slider_opacity" name=level>25</output>%
+                    </form>
+                </div>
+            </aside>		
+            <footer id="credits">
+                <span>
+                    Data source: <a href="http://catalogue.ceda.ac.uk/uuid/3f8944800cc48e1cbc29a5ee12d8542d" target="_blank">CRU TS 3.21</a>, @Climatic Research Unit, University of East Anglia,
+                </span>
+                <span>
+                    made available under the <a href="http://opendatacommons.org/licenses/odbl/1.0/" target="_blank">Open Database License</a>
+                </span>
+            </footer>
+        </div>
+        <div id="fsidebar"></div>
+        <div id="sidebar">
+
+            <header>
+                <div class="logo_container">
+                    <img src="img/GCV_simbolo_proyecto_color.svg" class="logo">
+                    <img src="img/GCV_icon_desplegar.svg" class="expand_btn">
+                </div>
+                <!-- <img src="img/GCV_simbolo_proyecto.svg"> -->
+                <h1>Global Climate <span>Monitor</span></h1>
+                <!-- <i><font color="yellow">Getting Knowledge from data</font></i> -->
+                <h4 >Getting Knowledge from data</h4>
+
+                <a href="#"><img src="img/GCV_icon_plegar.svg"></a>
+            </header>
+            <nav>
+                <ul>
+                    <li class="expanded">
+                        <h2><span class="light">By</span> Monthly values</h2>
+                        <div id="dialog1" class="controls">
+                            <select id="indicador" layer onfocus="UpdateFilter(this);
+                                    this.oldvalue = this.value;" onchange="UpdateFilter(this);
+                                            this.oldvalue = this.value;">
+                                <option value="Monthly precipitation" selected>Monthly rainfall</option>
+                                <option value="Monthly precipitation anomalies">Monthly rainfall anomalies</option>
+                                <option value="Monthly precipitation anomalies p">Monthly relative rainfall anomalies (%)</option>
+                                <option disabled>──────────</option>
+                                <option value="Monthly temperature">Monthly temperature</option>
+                                <option value="Monthly temperature anomalies">Monthly temperature anomalies</option>
+                                <option value="Monthly minimum temperature">Monthly minimum temperature</option>
+                                <option value="Monthly minimum temperature anomalies">Monthly minimum temperature anomalies</option>
+                                <option value="Monthly maximum temperature">Monthly maximum temperature</option>
+                                <option value="Monthly maximum temperature anomalies">Monthly maximum temperature anomalies</option>
+                                <option disabled>──────────</option>
+                                <option value="Monthly etp">Monthly potential evapotranspiration</option>
+                                <option value="Monthly etp anomalies">Monthly potential evapotranspiration anomalies</option>
+                                <option value="Monthly etp anomalies p">Monthly relative potential evapotranspiration anomalies (%)</option>
+                            </select>
+                            <select id="mes" onfocus="UpdateFilter();" onchange="UpdateFilter();">
+                                <option value="1">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12" selected>December</option>                        
+                            </select>
+                            <select id="agno" onfocus="UpdateFilter();" onchange="UpdateFilter();">
+							<!--<option value="2013">2013</option>
+								<option value="2014">2014</option>
+							-->	
+							<option value="2012" selected>2012</option>
+                                <option value="2011">2011</option>
+                                <option value="2010">2010</option>
+                                <option value="2009">2009</option>
+                                <option value="2008">2008</option>
+                                <option value="2007">2007</option>
+                                <option value="2006">2006</option>
+                                <option value="2005">2005</option>
+                                <option value="2004">2004</option>
+                                <option value="2003">2003</option>
+                                <option value="2002">2002</option>
+                                <option value="2001">2001</option>
+                                <option value="2000">2000</option>
+                                <option value="1999">1999</option>
+                                <option value="1998">1998</option>
+                                <option value="1997">1997</option>
+                                <option value="1996">1996</option>
+                                <option value="1995">1995</option>
+                                <option value="1994">1994</option>
+                                <option value="1993">1993</option>
+                                <option value="1992">1992</option>
+                                <option value="1991">1991</option>
+                                <option value="1990">1990</option>
+                                <option value="1989">1989</option>
+                                <option value="1988">1988</option>
+                                <option value="1987">1987</option>
+                                <option value="1986">1986</option>
+                                <option value="1985">1985</option>
+                                <option value="1984">1984</option>
+                                <option value="1983">1983</option>
+                                <option value="1982">1982</option>
+                                <option value="1981">1981</option>
+                                <option value="1980">1980</option>
+                                <option value="1979">1979</option>
+                                <option value="1978">1978</option>
+                                <option value="1977">1977</option>
+                                <option value="1976">1976</option>
+                                <option value="1975">1975</option>
+                                <option value="1974">1974</option>
+                                <option value="1973">1973</option>
+                                <option value="1972">1972</option>
+                                <option value="1971">1971</option>
+                                <option value="1970">1970</option>
+                                <option value="1969">1969</option>
+                                <option value="1968">1968</option>
+                                <option value="1967">1967</option>
+                                <option value="1966">1966</option>
+                                <option value="1965">1965</option>
+                                <option value="1964">1964</option>
+                                <option value="1963">1963</option>
+                                <option value="1962">1962</option>
+                                <option value="1961">1961</option>
+                                <option value="1960">1960</option>
+                                <option value="1959">1959</option>
+                                <option value="1958">1958</option>
+                                <option value="1957">1957</option>
+                                <option value="1956">1956</option>
+                                <option value="1955">1955</option>
+                                <option value="1954">1954</option>
+                                <option value="1953">1953</option>
+                                <option value="1952">1952</option>
+                                <option value="1951">1951</option>
+                                <option value="1950">1950</option>
+                                <option value="1949">1949</option>
+                                <option value="1948">1948</option>
+                                <option value="1947">1947</option>
+                                <option value="1946">1946</option>
+                                <option value="1945">1945</option>
+                                <option value="1944">1944</option>
+                                <option value="1943">1943</option>
+                                <option value="1942">1942</option>
+                                <option value="1941">1941</option>
+                                <option value="1940">1940</option>
+                                <option value="1939">1939</option>
+                                <option value="1938">1938</option>
+                                <option value="1937">1937</option>
+                                <option value="1936">1936</option>
+                                <option value="1935">1935</option>
+                                <option value="1934">1934</option>
+                                <option value="1933">1933</option>
+                                <option value="1932">1932</option>
+                                <option value="1931">1931</option>
+                                <option value="1930">1930</option>
+                                <option value="1929">1929</option>
+                                <option value="1928">1928</option>
+                                <option value="1927">1927</option>
+                                <option value="1926">1926</option>
+                                <option value="1925">1925</option>
+                                <option value="1924">1924</option>
+                                <option value="1923">1923</option>
+                                <option value="1922">1922</option>
+                                <option value="1921">1921</option>
+                                <option value="1920">1920</option>
+                                <option value="1919">1919</option>
+                                <option value="1918">1918</option>
+                                <option value="1917">1917</option> 
+                                <option value="1916">1916</option> 
+                                <option value="1915">1915</option>
+                                <option value="1914">1914</option> 
+                                <option value="1913">1913</option>
+                                <option value="1912">1912</option> 
+                                <option value="1911">1911</option>
+                                <option value="1910">1910</option> 
+                                <option value="1909">1909</option> 
+                                <option value="1908">1908</option>
+                                <option value="1907">1907</option> 
+                                <option value="1906">1906</option> 
+                                <option value="1905">1905</option>
+                                <option value="1904">1904</option>
+                                <option value="1903">1903</option> 
+                                <option value="1902">1902</option>
+                                <option value="1901">1901</option>							
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <h2><span>By</span> Annual values</h2>
+                        <div id="dialog2" class="controls">
+                            <select id="annuals" layer  onfocus="UpdateFilter_a(this);
+                                    this.oldvalue = this.value;" onchange="UpdateFilter_a(this);
+                                            this.oldvalue = this.value;">
+                                <option value="Seasonality Index">Seasonality Index</option>
+                                <option disabled>──────────</option>
+                                <option value="Annual precipitation">Annual rainfall</option>
+                                <option value="Annual precipitation anomalies">Annual rainfall anomalies</option>
+                                <option disabled>──────────</option>
+                                <option value="Annual mean temperature">Annual mean temperature</option>
+                                <option value="Annual mean temperature anomalies">Annual mean temperature anomalies</option>
+                                <option value="Annual minimum temperature">Annual minimum temperature</option>
+                                <option value="Annual minimum temperature anomalies">Annual minimum temperature anomalies</option>
+                                <option value="Annual maximum temperature">Annual maximum temperature</option>
+                                <option value="Annual maximum temperature anomalies">Annual maximum temperature anomalies</option>
+                                <option disabled>──────────</option>
+                                <option value="Annual etp">Annual PET</option>
+                                <option value="Annual etp anomalies">Annual PET anomalies</option>
+                            </select>
+                            <select id="mes_a"> 
+                                <option disabled>─</option>				
+                            </select>
+                            <select id="agno_a" onfocus="UpdateFilter_a();" onchange="UpdateFilter_a();">
+                                <option value="1901" selected="selected">1901</option>
+                                <option value="1902">1902</option>
+                                <option value="1903">1903</option>
+                                <option value="1904">1904</option>
+                                <option value="1905">1905</option>
+                                <option value="1906">1906</option>
+                                <option value="1907">1907</option>
+                                <option value="1908">1908</option>
+                                <option value="1909">1909</option>
+                                <option value="1910">1910</option>
+                                <option value="1911">1911</option>
+                                <option value="1912">1912</option>
+                                <option value="1913">1913</option>
+                                <option value="1914">1914</option>
+                                <option value="1915">1915</option>
+                                <option value="1916">1916</option>
+                                <option value="1917">1917</option>
+                                <option value="1918">1918</option>
+                                <option value="1919">1919</option>
+                                <option value="1920">1920</option>
+                                <option value="1921">1921</option>
+                                <option value="1922">1922</option>
+                                <option value="1923">1923</option>
+                                <option value="1924">1924</option>
+                                <option value="1925">1925</option>
+                                <option value="1926">1926</option>
+                                <option value="1927">1927</option>
+                                <option value="1928">1928</option>
+                                <option value="1929">1929</option>
+                                <option value="1930">1930</option>
+                                <option value="1931">1931</option>
+                                <option value="1932">1932</option>
+                                <option value="1933">1933</option>
+                                <option value="1934">1934</option>
+                                <option value="1935">1935</option>
+                                <option value="1936">1936</option>
+                                <option value="1937">1937</option>
+                                <option value="1938">1938</option>
+                                <option value="1939">1939</option>
+                                <option value="1940">1940</option>
+                                <option value="1941">1941</option>
+                                <option value="1942">1942</option>
+                                <option value="1943">1943</option>
+                                <option value="1944">1944</option>
+                                <option value="1945">1945</option>
+                                <option value="1946">1946</option>
+                                <option value="1947">1947</option>
+                                <option value="1948">1948</option>
+                                <option value="1949">1949</option>
+                                <option value="1950">1950</option>
+                                <option value="1951">1951</option>
+                                <option value="1952">1952</option>
+                                <option value="1953">1953</option>
+                                <option value="1954">1954</option>
+                                <option value="1955">1955</option>
+                                <option value="1956">1956</option>
+                                <option value="1957">1957</option>
+                                <option value="1958">1958</option>
+                                <option value="1959">1959</option>
+                                <option value="1960">1960</option>
+                                <option value="1961">1961</option>
+                                <option value="1962">1962</option>
+                                <option value="1963">1963</option>
+                                <option value="1964">1964</option>
+                                <option value="1965">1965</option>
+                                <option value="1966">1966</option>
+                                <option value="1967">1967</option>
+                                <option value="1968">1968</option>
+                                <option value="1969">1969</option>
+                                <option value="1970">1970</option>
+                                <option value="1971">1971</option>
+                                <option value="1972">1972</option>
+                                <option value="1973">1973</option>
+                                <option value="1974">1974</option>
+                                <option value="1975">1975</option>
+                                <option value="1976">1976</option>
+                                <option value="1977">1977</option>
+                                <option value="1978">1978</option>
+                                <option value="1979">1979</option>
+                                <option value="1980">1980</option>
+                                <option value="1981">1981</option>
+                                <option value="1982">1982</option>
+                                <option value="1983">1983</option>
+                                <option value="1984">1984</option>
+                                <option value="1985">1985</option>
+                                <option value="1986">1986</option>
+                                <option value="1987">1987</option>
+                                <option value="1988">1988</option>
+                                <option value="1989">1989</option>
+                                <option value="1990">1990</option>
+                                <option value="1991">1991</option>
+                                <option value="1992">1992</option>
+                                <option value="1993">1993</option>
+                                <option value="1994">1994</option>								
+                                <option value="1995">1995</option>
+                                <option value="1996">1996</option> 
+                                <option value="1997">1997</option> 
+                                <option value="1998">1998</option>
+                                <option value="1999">1999</option> 
+                                <option value="2000">2000</option>
+                                <option value="2001">2001</option> 
+                                <option value="2002">2002</option>
+                                <option value="2003">2003</option> 
+                                <option value="2004">2004</option> 
+                                <option value="2005">2005</option>
+                                <option value="2006">2006</option> 
+                                <option value="2007">2007</option> 
+                                <option value="2008">2008</option>
+                                <option value="2009">2009</option>
+                                <option value="2010">2010</option> 
+                                <option value="2011">2011</option>
+                                <option value="2012">2012</option>	
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <h2><span>By</span> Normals</h2>
+                        <div id="dialog3" class="controls">
+                            <select id="normals" layer onfocus="this.oldvalue = this.value;
+                                    UpdateFilter_n(this);
+                                    this.oldvalue = this.value;" onchange="UpdateFilter_n(this);
+                                            this.oldvalue = this.value;">
+                                <option value="Monthly precipitation normals">Monthly rainfall</option>
+                                <option disabled>──────────</option>
+                                <option value="Monthly temperature normals">Monthly temperature</option>
+                                <option value="Monthly minimum temperature normals">Monthly minimum temperature</option>
+                                <option value="Monthly maximum temperature normals">Monthly maximum temperature</option>
+                                <option disabled>──────────</option>
+                                <option value="Monthly etp normals">Monthly potential evapotranspiration</option>
+                            </select>
+                            <select id="mes_n" onfocus="UpdateFilter_n();" onchange="UpdateFilter_n();">
+                                <option value="1" selected="selected">January</option>
+                                <option value="2">February</option>
+                                <option value="3">March</option>
+                                <option value="4">April</option>
+                                <option value="5">May</option>
+                                <option value="6">June</option>
+                                <option value="7">July</option>
+                                <option value="8">August</option>
+                                <option value="9">September</option>
+                                <option value="10">October</option>
+                                <option value="11">November</option>
+                                <option value="12">December</option>
+                                <option value="13">Autum</option>
+                                <option value="14">Winter</option>
+                                <option value="15">Spring</option>
+                                <option value="16">Summer</option>  								
+                            </select>
+                            <select id="period_n" onfocus="UpdateFilter_n();" onchange="UpdateFilter_n();">
+                                <option value="1930" selected="selected">1901-1930</option>
+                                <option value="1940">1911-1940</option>
+                                <option value="1950">1921-1950</option>
+                                <option value="1960">1931-1960</option>
+                                <option value="1970">1941-1970</option>
+                                <option value="1980">1951-1980</option>
+                                <option value="1990">1961-1990</option>
+                                <option value="2000">1971-2000</option>	
+                            </select>
+                        </div>
+                    </li>
+                    <li>
+                        <h2><span>By</span> Trends</h2>
+                        <div id="dialog4" class="controls">
+                            <select id="v_trends" layer  onfocus="this.oldvalue = this.value;
+                                    UpdateFilter_t(this);
+                                    this.oldvalue = this.value;" onchange="UpdateFilter_t(this);
+                                            this.oldvalue = this.value;">
+                                <option value="1">Rainfall</option>
+                                <option value="2">Mean temperatures</option>
+                                <option value="3">Minimum temperatures</option>
+                                <option value="4">Maximum temperatures</option>		
+                                <option value="5">Potential Evapotranspiration</option>										
+                            </select>
+                            <select id="mes_t"> 
+                                <option disabled>─</option>				
+                            </select>
+                            <select id="period_t" onfocus="UpdateFilter_t();" onchange="UpdateFilter_t();">
+                                <option value="1" selected="selected">1901-2012</option>
+                                <option value="2">1901-1950</option>
+                                <option value="3">1951-2012</option>
+                            </select>
+                        </div>
+                    </li>
+                    <li class="about-and-contact-li">
+                        <a id="about-and-contact" href="#" ><h2>About <span>and</span> Contact</h2></a>
+                    </li>
+                </ul>
+                <p class="resume"><span class="category"><span class="light">By</span> Monthly values</span><span class="criteria">Monthly temperature</span> August 1930</p>
+            </nav>
+
+            <footer>
+                <div style="position: relative">
+                    <div class="position: absolute">
+                        <a class="logo" style="padding-left: 10%;width:50px;height:50px;display:initial" href="http://grupo.us.es/climatemonitor/" target="_blank"><img src="img/logo_grupo.png"></a>
+                    </div>
+                    <div style="position: absolute;top: 10px;left: 70px;"><p><strong>Climate Research</strong><br> Group</p><br></div>
+                </div>
+                
+                <div class="links">
+                    <a href="http://www.us.es/" target="_blank" class="concealable">University of Seville</a>
+                    <a href="http://geographica.gs" target="_blank"><span class="concealable">Geographica </span><img src="img/logo_geographica.svg"></a>
+                </div>
+            </footer>
+        </div>
+
+        <script src="OpenLayers-2.13.1b/OpenLayers.js"></script>
+
+        <script src="js/gcm2.js"></script>
+        <script src="js/leg2.js"></script>
+        <script src="http://maps.google.com/maps/api/js?sensor=false&amp;v=3.7"></script>
+        <script src="js/scripts.js"></script>
+
+        <script>
+                                (function (i, s, o, g, r, a, m) {
+                                    i['GoogleAnalyticsObject'] = r;
+                                    i[r] = i[r] || function () {
+                                        (i[r].q = i[r].q || []).push(arguments)
+                                    }, i[r].l = 1 * new Date();
+                                    a = s.createElement(o),
+                                            m = s.getElementsByTagName(o)[0];
+                                    a.async = 1;
+                                    a.src = g;
+                                    m.parentNode.insertBefore(a, m)
+                                })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+                                ga('create', 'UA-9148278-60', 'globalclimatemonitor.org');
+                                ga('send', 'pageview');
+        </script>
+    </body>
+</html>

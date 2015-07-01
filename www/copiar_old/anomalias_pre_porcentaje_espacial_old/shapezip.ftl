@@ -1,0 +1,3 @@
+zip=Monthly_rainfall_anomalies_percent
+shp=Monthly_rainfall_anomalies_percent
+txt=wfsrequest
