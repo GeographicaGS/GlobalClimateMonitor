@@ -23,6 +23,7 @@
         <link rel="stylesheet" href="css/reset.css"/>
         <link rel="stylesheet" href="css/base.css"/>
         <link rel="stylesheet" href="css/main.css"/>
+        <link rel="stylesheet" href="css/download.css"/>
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="js/bootstrap-tour-standalone.min.js"></script>
@@ -34,23 +35,103 @@
     </head>
     <body onload="init(); UpdateFilterfirst(); $('a.fancydelay').trigger('click');">
 		<a class="fancydelay"></a>
+        
+        <div class="fancyDownload">
+            <h3>Download options</h3>
+            <div class="section">
+                <input checked type="radio" name="type" value="data"><label class="labelType active">Data</label>
+                <input type="radio" name="type" value="picture"><label class="labelType">Picture</label>
+            </div>
+            <div class="section">
+                <span>1. Select the file types:</span>
+                <div type="data" class="active">
+                    <input checked type="radio" name="fileTypeData" value="csv"><label>CSV</label>
+                    <input type="radio" name="fileTypeData" value="excel2007"><label>XLSX</label>
+                </div>
+                <div type="picture">
+                    <input checked type="radio" name="fileTypePicture" value="kml"><label>KML</label>
+                    <input type="radio" name="fileTypePicture" value="kml_p"><label>KML Placemark</label>
+                    <input type="radio" name="fileTypePicture" value="tiff"><label>TIFF</label>
+                    <input type="radio" name="fileTypePicture" value="jpg"><label>JPG</label>
+                    <input type="radio" name="fileTypePicture" value="shape"><label>Shape</label>
+                </div>
+            </div>
+            <div class="section">
+                <span class="mr" style="display: inline-block;">2. Select the date:</span>
+                <input checked type="radio" name="timeType" value="indicador"><label class="mr">By Monthly</label>
+                <input type="radio" name="timeType" value="annuals"><label class="mr">By Annual</label>
+                <input type="radio" name="timeType" value="normals"><label class="mr">By Normals</label>
+                <input type="radio" name="timeType" value="v_trends"><label class="mr">By Trends</label>
+                
+                <div class="downloadMonth">
+                    <div value="indicador" class="active">
+                        <i>From</i>
+                        <select id='monthSelectFrom' class="monthSelect"></select>
+                        <select id='yearSelectFrom' class="yearSelect ml"></select>
+                        
+                        <i style="margin-left: 58px;">To</i>
+                        <select id='monthSelectTo' class="monthSelect"></select>
+                        <select id='yearSelectTo' class="yearSelect ml"></select>
+
+                    </div>
+                    <div value="annuals">
+                        <i>From</i>
+                        <select  id='byAnnualYearSelectFrom' class="byAnnualYearSelect ml"></select>
+                        
+                        <i style="margin-left: 58px;">To</i>
+                        <select id='byAnnualYearSelectTo' class="byAnnualYearSelect"></select>
+                    </div>
+                    <div value="normals">
+                        <select class="perdiodMonthSelect ml"></select>
+                        <select class="perdiodSelect ml"></select>
+                    </div>
+                    <div value="v_trends">
+                        <select class="trendSelect ml"></select>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <!-- <span>3. Select the variable (1):</span>
+                <div class="variableSelect">Temperature</div>
+                <ul class="variableList"></ul>
+                <i>You can select multiple variables</i> -->
+                <span>3. Select the variable:</span>
+                <select class='variableDownload'></select>
+            </div>
+
+            <div class="keypad">
+                <input type="button" value="Download">
+                <a href="#">Close</a>
+            </div>
+        </div>
+
         <div id="map"> <!-- INSERTE AQUÍ EL MAPA  --> 
 				<noscript>
 					<h3>Welcome to Globalclimatemonitor.org</h3>
 					<p>We're sorry, but our site requires Javascript.</p>
 					<p><a style="color: blue; text-decoration: underline" href="http://www.activatejavascript.org/">Here</a> you will find instructions on how to enable Javascript in your browser.</p>
 				</noscript>
-				<div id="help" ><a href="#" class="" title="Take a guided tour">Guided tour</a></div>
+				<!-- <div id="help" ><a href="#" class="" title="Take a guided tour">Guided tour</a></div> -->
 				<div id="tools1"><a id="ctrl_fullex_ctrl" title="Zoom to full extent"></a></div>
 				<a id="ctrl_zbox_ctrl" href="#" class="" title="Zoom to box"></a>
 				<a id="ctrl_info_ctrl" href="#" class="" title="Click on a point to get value"></a>
-				<a id="ctrl_info_capa_ctrl" href="#" class="" title="Click to get layer info"></a>
-				<a id="ctrl_sym" href="#" class="" title="Click to switch symbology"></a>
+				<!-- <a id="ctrl_info_capa_ctrl" href="#" class="" title="Click to get layer info"></a> -->
 				<a id="ctrl_play" href="#" class="" title="Click to open animation of normals in a new window"></a>
-				<a id="ctrl_change_viewer" href="#" class="" title="Click to launch viewer in WGS84"></a>
-				<a id="ctrl_survey" href="#" class="" title="Click to start survey"></a>
+
+                <a id="ctrl_download" href="#" class="" title="Download options"></a>
+                <div id="ctrl_download_options">
+                    <ul>
+                        <li class="liPoint">Download a point</li>
+                        <li class="liBounding">Download a bounding box</li>
+                        <li class="liMap">Complete map</li>
+                    </ul>
+                </div>
+
+				<!-- <a id="ctrl_change_viewer" href="#" class="" title="Click to launch viewer in WGS84"></a> -->
+				<!-- <a id="ctrl_survey" href="#" class="" title="Click to start survey"></a> -->
 			  <div id="tools">
-			  <h3 class="contracted" id="tools_h3" title="Download options"></h3>
+			  
+<!--               <h3 class="contracted" id="tools_h3" title="Download options"></h3>
 			  <div id="tools_iconos" class="content">
 				<a id="ctrl_get_kml" href="#" class="" title="Click to export layer in kml (raster) for this extent"></a>
 				<a id="ctrl_get_kml_p" href="#" class="" title="Click to export layer in kml (placemark) for this extent"></a>
@@ -59,8 +140,16 @@
 				<a id="ctrl_get_csv" href="#" class="" title="Click to download data in csv for this extent"></a>
 				<a id="ctrl_get_xls" href="#" class="" title="Click to download data in Excel2007 for this extent"></a>
 				<a id="ctrl_get_shp" href="#" class="" title="Click to download data in zipped shapefile for this extent"></a>
-			</div>
-			</div>
+			</div> -->
+
+              <!-- <h3 class="contracted" id="tools_h3" title="Download options"></h3>
+              <div id="tools_iconos" class="content">
+                <a id="pointDownload" style="position: absolute;top: 60px;color: red;" href="#">Punto</a>
+                <a id="boxDownload" style="position: absolute;top: 100px;color: red;" href="#">Bounding Box</a>
+                <a style="position: absolute;top: 150px;color: red;" href="#">Mapa completo</a>
+            </div> -->
+			
+            </div>
             <select id="layer_switcher" title="Change base layer">			
                 <option value="osm">OpenStreetMap</option>
                 <option value="world_limits" selected>White background with borders</option>
@@ -75,11 +164,12 @@
             <aside id="legend">
                 <h3 id="legend_h3">Legend</h3>
                 <div id="leyendacapa" class="content" style="padding-left: 60px;padding-top: 10px;padding-bottom: 10px;"></div>
+                <a id="ctrl_sym" href="#" class="" title="Click to switch symbology"></a>
                 <div id="slider" class="slider">
                     <form oninput="level.value = flevel.valueAsNumber">
                         <label for="slider_opacity">Transparency</label>
                         <input name="flevel" id="slider_opacity" type="range" min="0" max="100" value="0" onchange="updateTransparency(this.value)"> 
-                        <output for="slider_opacity" name=level>0</output>%
+                        <!-- <output for="slider_opacity" name=level>0</output>% -->
                     </form>
                 </div>
             </aside>		
@@ -143,7 +233,7 @@
                                 <option value="12">December</option>                        
                             </select>
                             <select id="agno" onchange="UpdateFilter(); testLayer();">
-							<option value="2015" selected>2015</option>
+							    <option value="2015" selected>2015</option>
                                 <option value="2014">2014</option>
 								<option value="2013">2013</option>
                                 <option value="2012">2012</option>
@@ -257,7 +347,11 @@
                                 <option value="1904">1904</option>
                                 <option value="1903">1903</option> 
                                 <option value="1902">1902</option>
-                                <option value="1901">1901</option>	                            </select>
+                                <option value="1901">1901</option>	                            
+                            </select>
+                            <div class="infoLayer">
+                                <span>Layer</span>
+                            </div>
                         </div>
                     </li>
                     <li id="diag2">
@@ -399,6 +493,9 @@
                                 <option value="1902">1902</option>
                                 <option value="1901">1901</option>		
                             </select>
+                            <div class="infoLayer">
+                                <span>Layer</span>
+                            </div>
                         </div>
                     </li>
                     <li id="diag3">
@@ -432,7 +529,7 @@
                                 <option value="15">Spring</option>
                                 <option value="16">Summer</option>  								
                             </select>
-                            <select id="period_n" onchange="UpdateFilter_n();">
+                            <select id="period_n" onchange="UpdateFilter_n();" class="mb">
                                 <option value="1930" selected="selected">1901-1930</option>
                                 <option value="1940">1911-1940</option>
                                 <option value="1950">1921-1950</option>
@@ -442,6 +539,9 @@
                                 <option value="1990">1961-1990</option>
                                 <option value="2000">1971-2000</option>	
                             </select>
+                            <div class="infoLayer">
+                                <span>Layer</span>
+                            </div>
                         </div>
                     </li>
                     <li id="diag4">
@@ -462,18 +562,25 @@
                                 <option value="2">1901-1950</option>
                                 <option value="3">1951-2012</option>
                             </select>
+                            <div class="infoLayer">
+                                <span>Layer</span>
+                            </div>
                         </div>
                     </li>
 					<li>
                     </li>
+                    <li class="guide-tour-li">
+                        <a id="help" href="#" ><h2>Guided tour</h2></a>
+                    </li>
+                    <li class="about-and-contact-li">
+                        <a id="about-and-contact" href="#" ><h2>About and Contact</h2></a>
+                    </li>
+                    <li class="gcm-li">
+                        <a id="ctrl_survey" href="#" ><h2>GCM Survey</h2></a>
+                    </li>
                     <li class="report-li">
                         <a id="report" href="#"><h2>NOAA monthly report</h2></a>
-                    </li>
-                    </li>
-					<li>					
-                    <li class="about-and-contact-li">
-                        <a id="about-and-contact" href="#" ><h2>About <span>and</span> Contact</h2></a>
-                    </li>
+                    </li>					
                     <li class="news-li">
                         <a id="news" href="#"><h2>GCM News</h2></a>
                     </li>								
@@ -482,20 +589,18 @@
             </nav>
 
             <footer>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Optimized for Chrome, Firefox
-				<br>
-				<br>
                 <div style="position: relative">
                     <div class="position: absolute">
-                        <a class="logo" style="padding-left: 10%;width:50px;height:50px;display:initial" href="http://grupo.us.es/climatemonitor/" target="_blank"><img src="img/logo_grupo.png"></a>
+                        <a class="logo" style="padding-left: 10px;width:50px;height:50px;display:initial" href="http://grupo.us.es/climatemonitor/" target="_blank"><img src="img/logo_grupo.png"></a>
                     </div>
-                    <div style="position: absolute;top: 10px;left: 70px;"><p><strong>Climate Research</strong><br> Group</p><br></div>
+                    <div style="position: absolute;top: 10px;left: 63px;"><p><strong>Climate Research</strong><br> Group</p><br></div>
                 </div>
                 
                 <div class="links">
                     <a href="http://www.us.es/" target="_blank" class="concealable">University of Seville</a>
                     <a href="http://www.geographica.gs/#!/en/home" target="_blank"><span class="concealable">Geographica </span><img src="img/logo_geographica.svg"></a>
                 </div>
+                <div class="optimice">Optimized for <span>Chrome</span> and <span>Firefox</span></div>
             </footer>
         </div>
 
@@ -506,6 +611,7 @@
         <script src="http://maps.google.com/maps/api/js?sensor=false&amp;v=3.7"></script>
         <script src="js/scripts.js"></script>
 		<script src="js/guided_tour.js"></script>
+        <script src="js/download.js"></script>
 
         <script>
                                 (function (i, s, o, g, r, a, m) {

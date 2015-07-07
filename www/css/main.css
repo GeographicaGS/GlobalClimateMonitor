@@ -113,6 +113,11 @@ span.light {
     width: 100%;
     position: absolute;
 }
+
+#map.pointDownload{
+    cursor: pointer;
+}
+
 #map2 {
     height: 100%;
 	width: auto;
@@ -127,6 +132,7 @@ span.light {
     border-right: 1px solid #42444e;
     width: 220px;
     height: 100%;
+    overflow: auto;
 }
 
 
@@ -201,6 +207,8 @@ span.light {
     color: #cdcdd0;
     margin: 2px 0 2px 1px;
     cursor: pointer;
+    font-weight: normal;
+    font-size: 15px;
 }
 
 #sidebar nav .controls {
@@ -252,7 +260,7 @@ span.light {
 
 #sidebar nav ul li.expanded {
     background-color: #797b84;
-    max-height: 185px;
+    max-height: 240px;
 }
 
 #sidebar nav ul li.expanded h2 {
@@ -498,8 +506,12 @@ span.light {
 #legend .slider {
     font-size: 8pt;
     padding: 12px;
+    padding-top: 8px;
     background-color: rgba(129,128,138, .2);
-    border-top: 1px solid #80818a;
+    border: 1px solid #80818a;
+    width: 130px;
+    float: right;
+    height: 46px;
 }
 
 #legend .slider label {
@@ -514,6 +526,7 @@ span.light {
     width: 100px;
     vertical-align: middle;
     outline: none;
+    margin-top: 5px;
 }
 
 #legend .slider input[type='range']::-moz-range-track {
@@ -747,13 +760,21 @@ span.light {
 }
 
 @media (max-width: 920px) {
-    #sidebar footer {
+    /*#sidebar footer {
         bottom: 28px;
-    }
+    }*/
 
     #credits {
         width: 100%;
     }
+}
+
+@media (max-height: 790px) {
+    #sidebar footer {
+        position: relative;
+        margin-top: 20px;
+    }
+
 }
 
 #period_n{
@@ -816,7 +837,7 @@ span.light {
 
 #layer_switcher{
     position: absolute;
-    right: 75px;
+    right: 111px;
     z-index: 1000;
     top: 24px;
     background-color: #283237;
@@ -828,59 +849,128 @@ span.light {
     font-family: 'latoregular', sans-serif;
 }
 #ctrl_zbox_ctrl{
-    border: 1px solid #909599;
-    background: rgba(233,234,234,0.6) url("../img/GCV_icon_herramienta_zoomin.png") no-repeat;
+    /*border: 1px solid #909599;*/
+    background: rgba(234,234,234,1) url("../img/GCV_icon_herramienta_zoomcaja.svg") no-repeat;
     width: 36px;
     height: 36px;
+    border-radius: 4px;
+    border: 1px solid #909599;
     position: absolute;
     right:27px;
-    top:178px;
+    top:160px;
     z-index: 1000;
 	cursor: pointer;
 }
 
 #ctrl_zbox_ctrl.enable{
-    background: rgba(85,170,230,0.6) url("../img/GCV_icon_herramienta_zoomin.png") no-repeat;
+    background: rgba(51,153,204,1) url("../img/GCV_icon_herramienta_zoomcaja-sel.svg") no-repeat;
 }
 #ctrl_info_ctrl{
+    /*border: 1px solid #909599;
+    background: rgba(233,234,234,0.6) url("../img/GCV_icon_herramienta_info.svg") no-repeat;*/
+    background: rgba(234,234,234,1) url("../img/GCV_icon_herramienta_info.svg") no-repeat;
+    border-radius: 4px;
     border: 1px solid #909599;
-    background: rgba(233,234,234,0.6) url("../img/GCV_icon_herramienta_info.svg") no-repeat;
     width: 36px;
     height: 36px;
     position: absolute;
     right:27px;
-    top: 254px;
+    top: 250px;
     z-index: 1000;
 }
 
 #ctrl_info_ctrl.enable{
-    background: rgba(85,170,230,0.6) url("../img/GCV_icon_herramienta_info-sel.svg") no-repeat;
+    background: rgba(51,153,204,1) url("../img/GCV_icon_herramienta_info-sel.svg") no-repeat;
 }
-#ctrl_sym{
+
+
+#ctrl_download{
+    background: rgba(234,234,234,1) url("../img/GCV_icon_herramienta_descarga.svg") no-repeat;
+    border-radius: 4px;
     border: 1px solid #909599;
-    background: rgba(233,234,234,0.6) url("../img/GCV_icon_herramienta_sym_c.svg") no-repeat;
     width: 36px;
     height: 36px;
     position: absolute;
     right:27px;
-    top: 330px;
+    top: 296px;
     z-index: 1000;
+    background-position: 1px;
+}
+
+#ctrl_download.active{
+    background: rgba(51,153,204,1) url("../img/GCV_icon_herramienta_descarga-sel.svg") no-repeat;
+}
+
+#ctrl_download_options{
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 342px;
+    margin-right: 12px;
+    background-color: #e9eaea;
+    border:1px solid #909599;
+    z-index: 1001;
+}
+
+#ctrl_download_options.active{
+    display: inherit;
+}
+
+#ctrl_download_options li{
+    font-size: 13px;
+    color: #42444e;
+    line-height: 27px;
+    border-bottom: 1px solid #bcbfc1;
+    padding-left: 10px;
+    padding-right: 10px;
+    cursor: pointer;
+}
+
+#ctrl_download_options li.active{
+    color: #fff;
+    background-color: #3399cc;
+}
+
+#ctrl_download_options li:last-of-type{
+    border:none;
+}
+
+#ctrl_sym{
+    border: 1px solid #909599;
+    background: rgba(242,242,243,1) url("../img/GCV_icon_simbologia_rect.svg") no-repeat;
+    /*width: 36px;*/
+    /*height: 36px;*/
+    /*position: absolute;*/
+    /*right:27px;*/
+    /*top: 330px;*/
+    /*z-index: 1000;*/
+    background-position: 9px;
+    /*left: 9px;*/
+    /*z-index: 10001;*/
+    /*top: 361px;*/
+    width: 45px;
+    height: 46px;
+    border-right: none;
+    display: block;
+    float: left;
 }
 
 #ctrl_sym.enable{
-    background: rgba(85,170,230,0.6) url("../img/GCV_icon_herramienta_sym_p.svg") no-repeat;
+    background: rgba(242,242,243,1) url("../img/GCV_icon_simbologia_circ.svg") no-repeat;
+    background-position: 9px;
 }
+
 #ctrl_play{
-    border: 1px solid #909599;
-    background: rgba(233,234,234,0.6) url("../img/icon_play.png") no-repeat;
-    width: 36px;
+    /*border: 1px solid #909599;*/
+    background: url("../img/GCV_mapa_animado.svg") no-repeat;
+    width: 38px;
     height: 36px;
     position: absolute;
-    right:27px;
-    top: 368px;
+    left:20px;
+    top: 20px;
     z-index: 1000;
 }
-#ctrl_survey{
+/*#ctrl_survey{
 	border: 1px solid #909599;
 	position:absolute; 
 	width:42px;
@@ -889,7 +979,7 @@ span.light {
 	left: 59px;
 	z-index: 1100;
 	background: rgba(233,234,234,0.6) url("../img/GCV_icon_survey.svg") no-repeat;
-}
+}*/
 #guided_tour{
 	border: 1px solid #909599;
 	position:absolute; 
@@ -916,13 +1006,18 @@ span.light {
 }
 
 .olControlZoomToMaxExtentItemInactive {
-    border: 1px solid #909599;
-    background: rgba(233,234,234,0.6) url("../img/GCV_icon_herramienta_change_viewer.png") no-repeat;
+    /*border: 1px solid #909599;*/
+    /*background: rgba(233,234,234,0.6) url("../img/GCV_icon_herramienta_change_viewer.png") no-repeat;*/
     width: 36px;
     height: 36px;
+    background: #e9eaea;
+    background-image: url("../img/GCV_icon_herramienta_vistacompleta.svg");
+    background-position: 0px 2px;
+    border: 1px solid #909599;
+    border-radius: 4px;
 	position: absolute;
-	right: 11px;
-	top: 121px;
+	right: 10px;
+	top: 180px;
 	z-index: 1000;
 	
 }
@@ -1024,7 +1119,7 @@ div.olControlMousePosition{
     z-index: 1005 !important;
     left: inherit !important;
     top: 26px !important;
-    right: 280px !important;
+    right: 304px !important;
     color: #42444e !important;
     font-size: 13px !important;
     font-family: 'latoregular', sans-serif !important;
@@ -1062,7 +1157,7 @@ div.olControlZoom{
     z-index: 1004 !important;
     right: 24px !important;
     left: inherit !important;
-    top: 20px !important;
+    top: 76px !important;
 }
 
 
@@ -1248,11 +1343,42 @@ p.about-entradilla-bold{
     display: flex;
 }
 .about-and-contact-li{
-    padding-left: 30px !important;
     background-image: url("/img/GCV_icon_info_menu.svg");
-    background-repeat: no-repeat;
-    background-position: 10px 11px;
 }
+
+.guide-tour-li{
+    background-image: url("/img/GCV_icon_ayuda_menu.svg");
+}
+
+.report-li{
+    background-image: url("/img/GCV_icon_link_menu.svg");
+}
+
+.news-li{
+    background-image: url("/img/GCV_icon_link_menu.svg");
+}
+
+.gcm-li{
+    background-image: url("/img/GCV_icon_encuesta_menu.svg");
+}
+
+
+.guide-tour-li, .about-and-contact-li, .gcm-li, .report-li, .news-li{
+    padding-left: 30px !important;
+    background-repeat: no-repeat;
+    background-position: 10px;
+    opacity: 0.8;
+}
+
+.guide-tour-li:hover, .about-and-contact-li:hover, .gcm-li:hover, .report-li:hover, .news-li:hover{
+    opacity: 1;
+}
+
+.guide-tour-li h2, #about-and-contact h2, .gcm-li h2, .report-li h2, .news-li h2{
+    font-family: 'latolight', sans-serif;
+    margin-left: 10px !important;
+}
+
 
 .about-table-cell{
     border-bottom: 1px solid #d7d8da;
@@ -1291,27 +1417,63 @@ header h4{
     font-style: italic;
 }
 #tools1 {
-position: absolute;
-width: 50px;
-height: 75px;
-top: 95px;
-right: 16px;
-padding: 3px;
-color: #fff;
-z-index: 1100;
-cursor: pointer;
+    position: absolute;
+    /*width: 78px;*/
+    height: 36px;
+    top: 24px;
+    right: 16px;
+    /*padding: 3px;*/
+    color: #fff;
+    z-index: 1100;
+    cursor: pointer;
+
+    border: 1px solid #909599;
+    border-radius: 4px;
+    background-color:#e9eaea;
 }
+
+#tools1 .olControlNavigationHistory{
+    float: left;
+    width: 34px !important;
+    height: 34px !important;
+}
+
+#tools1 .olControlNavigationHistoryPreviousItemInactive{
+    background: url("/img/GCV_icon_herramienta_retroceder.svg");
+}
+
+#tools1 .olControlNavigationHistoryPreviousItemActive{
+    background: url("/img/GCV_icon_herramienta_retroceder-sel.svg");
+}
+
+#tools1 .olControlNavigationHistoryPreviousItemInactive, #tools1 .olControlNavigationHistoryPreviousItemActive{
+    border-right: 1px solid #b1b1b2;
+} 
+
+#tools1 .olControlNavigationHistoryNextItemInactive{
+    background: url("/img/GCV_icon_herramienta_avanzar.svg");
+}
+
+#tools1 .olControlNavigationHistoryNextItemActive{
+    background: url("/img/GCV_icon_herramienta_avanzar-sel.svg");
+}
+
+#tools1 .olControlNavigationHistoryNextItemInactive, #tools1 .olControlNavigationHistoryNextItemActive{
+    float: right;
+}
+
 #tools {
 	position:absolute; 
 	width: 36px;
 	height: 320px;
 	top: 20px;
-	left: 10px;
+	left: 200px;
 	padding:3px;
 	color:#fff; 
 	z-index: 1100;
 
 }
+
 #tools_iconos {
 	z-index: 1100;
 	display:none;
@@ -1423,7 +1585,7 @@ font-size: larger !important;
   display: block;
   width: 300px !important;
 }
-#help{
+/*#help{
 width: 8em;
 height: 1.5em;
 position: absolute;
@@ -1439,4 +1601,43 @@ border: 1px solid #628C9C;
 background: -webkit-linear-gradient(#648880, #000000);
 background: -moz-linear-gradient(#648880, #000000);
 background: linear-gradient(#648880, #000000);
-} 
+} */
+
+
+.infoLayer{
+    width: 100%;
+    /*height: 28px;*/
+    padding-bottom: 5px;
+    background-color: #93949b;
+    font-size: 14px;
+    color:#f3f3f4;
+    text-align: center;
+    display: table;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.infoLayer span{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.infoLayer span::after{
+    content: url("../img/GCV_icon_layer-info.svg");
+    position: relative;
+    top: 3px;
+    margin-left: 10px;
+}
+
+.optimice{
+    background-color: #80818a;
+    font-size: 11px;
+    color: #cacbce;
+    text-align: center;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.optimice span{
+    color:#fff;
+}

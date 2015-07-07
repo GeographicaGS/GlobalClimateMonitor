@@ -1,0 +1,146 @@
+.fancyDownload{
+	display: none;
+	width: 720px;
+	background-color: white;
+	/*position: absolute;*/
+	/*left: 600px;*/
+	/*z-index: 1;*/
+	/*top: 50px;	*/
+	padding-left: 30px;
+	padding-right: 30px;
+}
+
+.fancyDownload .section{
+	border-bottom: 1px solid #e6e6e8;
+	padding-bottom: 20px;
+}
+
+.fancyDownload .section::last-of-type{
+	padding-bottom: 15px;
+}
+
+.fancyDownload .section div[type="data"], .fancyDownload .section div[type="picture"]{
+	display: none;
+}
+
+.fancyDownload .section div[type="data"].active, .fancyDownload .section div[type="picture"].active{
+	display: inherit;
+}
+
+.fancyDownload h3{
+	font-size: 22px;
+	line-height: 24px;
+	color: #60626d;
+	margin-bottom: 30px;
+}
+
+.fancyDownload .labelType{
+	font-size: 22px;
+	line-height: 24px;
+	color: #60626d;
+  	margin-right: 36px;
+  	top: 3px;
+}
+
+.fancyDownload label{
+	font-size: 15px;
+	line-height: 18px;
+	color:#60626d;
+	margin-left: 8px;
+	margin-right: 40px;
+	position: relative;
+  	top: 2px;
+}
+
+.fancyDownload .labelType.active{
+	color:#359acd;
+}
+
+.fancyDownload span{
+	font-size: 15px;
+	line-height: 18px;
+	color:#60626d;
+	display: block;
+	margin-bottom: 36px;
+	margin-top: 16px;
+}
+
+.fancyDownload i{
+	font-size: 13px;
+	color: #60626d;
+	position: relative;
+  	top: 5px;
+}
+
+.fancyDownload .keypad{
+	margin-top: 75px;
+}
+
+.fancyDownload .keypad input[type="button"]{
+	background-color: #55aad5;
+	border: 1px solid #006699;
+	font-size: 18px;
+	color: #fff;
+	border-radius: 4px;
+	padding: 8px 15px 8px 15px;
+	margin-right: 20px;
+}
+
+.fancyDownload .keypad a{
+	font-size: 18px;
+	color:#60626d;
+	position: relative;
+	top:3px;
+}
+
+.fancyDownload select, .fancyDownload .variableSelect, .variableList{
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	background: url('../img/GCV_icon_selector.svg') no-repeat right 10px center #e6e6e8;
+	padding: 8px 30px 8px 8px;
+	border-radius: 0;
+	font-size: 13px;
+	color:#42444e;
+}
+
+.fancyDownload .variableSelect{
+	width: 360px;
+	float: left;
+	margin-right: 10px;
+	cursor: pointer;
+}
+
+.fancyDownload .variableList{
+	position: absolute;
+	background: #e6e6e8;
+	top: 311px;
+	width: 360px;
+	padding: 0;
+	max-height: 150px;
+  	overflow: auto;
+  	display: none;
+}
+
+.fancyDownload .variableList li{
+	line-height: 28px;
+	border-bottom: 1px solid #dbd8d6;
+	padding: 0;
+	width: 360px;
+	padding-left: 10px;
+	cursor: pointer;
+}
+
+.fancyDownload .downloadMonth div{
+	display: none;
+}
+
+.fancyDownload .downloadMonth div.active{
+	display: inherit;
+}
+
+.fancyDownload .downloadMonth i{
+	font-style: normal;
+	top: 0;
+	margin-right: 10px;
+}

@@ -37,6 +37,7 @@ $('#legend h3').click(function (e) {
         $(this).addClass("contracted");
     }
     $(this).parent().find('.content,.slider').slideToggle();
+    $("#ctrl_sym").slideToggle();
 });
 
 function expandSidebar(e) {
@@ -251,6 +252,9 @@ $(document).on("click", "#ctrl_info_ctrl", function () {
         info.activate();
 		zoombox.deactivate();
 		$("#ctrl_zbox_ctrl").removeClass("enable");
+		if($("#ctrl_download").hasClass('active')){
+			$("#ctrl_download").trigger('click');
+		}
     }
 });
 $(document).on("click", "#ctrl_zbox_ctrl", function () {
@@ -263,10 +267,13 @@ $(document).on("click", "#ctrl_zbox_ctrl", function () {
         zoombox.activate();
 		info.deactivate();
 		$("#ctrl_info_ctrl").removeClass("enable");
+		if($("#ctrl_download").hasClass('active')){
+			$("#ctrl_download").trigger('click');
+		}
     }
 });
 
-$(document).on("click", "#ctrl_info_capa_ctrl", function () {
+$(document).on("click", "#ctrl_info_capa_ctrl, .infoLayer", function () {
     $.get("layers_info/" + $("li.expanded select[layer]").val().toLowerCase().replace(/ /g, "_") + ".html", function (html) {
         $.fancybox(html);
     });
