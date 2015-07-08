@@ -230,7 +230,7 @@ $(document).ready(function() {
 				diffDate -= firstDate.getMonth();
 			}
 			if(diffDate * points > 500000){
-				alert("Demasiados puntos");
+				alert("The download is limited to a maximum of 500000 rows per request. Please, try redefining you download options");
 			}else{
 				window.open(url);	
 			}
