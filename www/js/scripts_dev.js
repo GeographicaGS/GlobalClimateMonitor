@@ -37,6 +37,7 @@ $('#legend h3').click(function (e) {
         $(this).addClass("contracted");
     }
     $(this).parent().find('.content,.slider').slideToggle();
+    $("#ctrl_sym").slideToggle();
 });
 
 function expandSidebar(e) {
@@ -66,23 +67,39 @@ $(document).on("click", ".close_fancy", function () {
 });
 
 //Mensaje Survey
-$(document).ready(function(){
-    $("#survey_message").fancybox({
+$(document).ready(function() {
+/**
+ * jQuery Delay - A delay function
+ * Copyright (c) 2009 Clint Helfers - chelfers(at)gmail(dot)com |
+http://blindsignals.com
+ * Dual licensed under MIT and GPL.
+ * Date: 7/01/2009
+ * @author Clint Helfers
+ * @version 1.0.0
+ *
+ * http://blindsignals.com/index.php/2009/07/jquery-delay/
+ */
+
+$.fn.delay = function( time, name ) {
+  return this.queue( ( name || "fx" ), function() {
+  var self = this;
+  setTimeout(function() { $.dequeue(self); } , time );
+});
+};
+// ***************************
+// howto courtesy of JFK
+  $('a.fancydelay').fancybox({
   'content': "Please, take 1 minute to complete our survey once you have finnished. You can do it by clicking on the icon button in the top left corner of the map.",
   'height' : 115,
   'width' : 240,
   'autoDimensions': false,
   'autoSize': false,
-  'overlayShow': false
-    });
-    // One second delay
-    setTimeout(function(){
-        $("#survey_message").click();
-    }, 500);
+  'overlayShow': false,
+// set delay in milliseconds so 5000=5 secs
+//  'callbackOnStart': function(){$("#fancy_outer").delay(5000);}
+ });
 });
-//Fin Survey
-
-//Fin help
+//Fin mensaje survey
 $(document).on("change", "#layer_switcher", function () {
     var sel = $(this).val();
 
@@ -235,6 +252,9 @@ $(document).on("click", "#ctrl_info_ctrl", function () {
         info.activate();
 		zoombox.deactivate();
 		$("#ctrl_zbox_ctrl").removeClass("enable");
+		if($("#ctrl_download").hasClass('active')){
+			$("#ctrl_download").trigger('click');
+		}
     }
 });
 $(document).on("click", "#ctrl_zbox_ctrl", function () {
@@ -247,10 +267,13 @@ $(document).on("click", "#ctrl_zbox_ctrl", function () {
         zoombox.activate();
 		info.deactivate();
 		$("#ctrl_info_ctrl").removeClass("enable");
+		if($("#ctrl_download").hasClass('active')){
+			$("#ctrl_download").trigger('click');
+		}
     }
 });
 
-$(document).on("click", "#ctrl_info_capa_ctrl", function () {
+$(document).on("click", "#ctrl_info_capa_ctrl, .infoLayer", function () {
     $.get("layers_info/" + $("li.expanded select[layer]").val().toLowerCase().replace(/ /g, "_") + ".html", function (html) {
         $.fancybox(html);
     });

@@ -1,4 +1,4 @@
-var map, gmap, gsat, ghyb, gter, osm, prem, anomp, anompp, pren, tempm, anomt, tempn, tempmin, anomtmin, tempminn, tempmax, anomtmax, tempmaxn, etp, anometp, anometpp, etpn, seai, prea, tempa, etpa, etpaa, preaa, tempaa, tempmina, tempmaxa, tempminaa, tempmaxaa, world_limits, trends, info, zoombox, vmes, vagno, vmes_n, filter, filter_n, filter_t, filter_a, filterParams, svalue, pureCoverage, control, trans, vlayer, popups = {}, ley_trends1, ley_trends2;
+var map, gmap, gsat, ghyb, gter, osm, prem, anomp, anompp, pren, tempm, anomt, tempn, tempmin, anomtmin, tempminn, tempmax, anomtmax, tempmaxn, etp, anometp, anometpp, etpn, seai, prea, tempa, etpa, etpaa, preaa, tempaa, tempmina, tempmaxa, tempminaa, tempmaxaa, world_limits, trends, info, zoombox, vmes, vagno, vmes_n, filter, filter_n, filter_t, filter_a, filterParams, svalue, pureCoverage, control, trans, vlayer, pop, popups = {}, ley_trends1, ley_trends2;
 function init() {
 	resizeMe();
     OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
@@ -109,6 +109,24 @@ function init() {
 					  zoomOffset: 2,
 					  visibility: false
 				  });
+    sta_t = new OpenLayers.Layer.Stamen("toner-lite",
+                  {
+					  isBaseLayer: false, 
+					  sphericalMercator: true,
+					  numZoomLevels: 10,
+					  zoomOffset: 2,
+					  visibility: false,
+					  attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.'
+                  });	
+    sta_w = new OpenLayers.Layer.Stamen("watercolor",
+                  {
+					  isBaseLayer: false, 
+					  sphericalMercator: true,
+					  numZoomLevels: 10,
+					  zoomOffset: 2,
+					  visibility: false,
+					  attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
+                  });
     world_limits = new OpenLayers.Layer.WMS("White background with limits", "http://zidane.fgh.us.es:8080/geoserver/world/wms?", 
 				  
 				  {
@@ -192,13 +210,20 @@ function init() {
 
 //Filtro cql antes de info
 
-	
+//borra popups
+function deletePopup(){
+	if(!pop) return;
+	map.removePopup(pop);
+	pop.destroy();
+	pop=null;
+}	
 	
 //info
 
         info = new OpenLayers.Control.WMSGetFeatureInfo({
             url: '/geoserver/gcm/wms?', 
             title: 'Identify features by clicking',
+			hover: true,
             queryVisible: true,
 			maxFeatures: 1,
 			layers: [prem,anomp,anompp,pren,tempm,anomt,tempn,tempmin,anomtmin,tempminn,tempmax,anomtmax,tempmaxn,etp,anometp,anometpp,etpn,seai,prea,tempa,etpa,tempmina,tempmaxa,preaa,tempaa,etpaa,tempmaxaa,tempminaa,trends1,trends2,trends3,trends4,trends5],
@@ -238,18 +263,23 @@ function init() {
 					this.vendorParams = { cql_filter: filter }; 
                 }, 
 				getfeatureinfo: function(event) {
-					$.fancybox(event.text,{
-						"closeBtn" : false
-					});
-					
-                    // map.addPopup(new OpenLayers.Popup.FramedCloud(
-                    //     "chicken", 
-                    //     map.getLonLatFromPixel(event.xy),
-                    //     new OpenLayers.Size(400,300), //size
-                    //     event.text,//content HTML
-                    //     null, //anchor
-                    //     true //closeBox
-                    // ));
+					/*$.fancybox(event.text,{
+						"closeBtn" : false,
+						helpers:  {
+							overlay : null
+						}
+					});*/
+					deletePopup();
+					pop = new OpenLayers.Popup.FramedCloud(
+                         "Mipopup", 
+                         map.getLonLatFromPixel(event.xy),
+                         new OpenLayers.Size(0,0), //size
+                         "123.9 mm",//event.text,//content HTML
+                         null, //anchor
+                         false //closeBox
+                     );					 
+                     map.addPopup(pop);
+
                 
 				}
             }
@@ -268,7 +298,7 @@ function init() {
 
 //fin info
 
-    map.addLayers([world_limits, osm, gsat, gmap, ghyb, gter, prem, anomp, anompp, pren, tempm, tempmin, anomt, anomtmin, tempn, tempminn, tempmax, anomtmax, tempmaxn, etp, anometp, anometpp, etpn, seai, prea, tempa, tempmina, tempmaxa, etpa, preaa, tempaa, etpaa, tempmaxaa, tempminaa, trends1, trends2, trends3, trends4, trends5]);
+    map.addLayers([world_limits, osm, gsat, gmap, ghyb, gter, sta_t, sta_w, prem, anomp, anompp, pren, tempm, tempmin, anomt, anomtmin, tempn, tempminn, tempmax, anomtmax, tempmaxn, etp, anometp, anometpp, etpn, seai, prea, tempa, tempmina, tempmaxa, etpa, preaa, tempaa, etpaa, tempmaxaa, tempminaa, trends1, trends2, trends3, trends4, trends5]);
 	map.setCenter(new OpenLayers.LonLat(10, 40).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject()), 0);
     // create WMTS GetFeatureInfo control
     
@@ -300,7 +330,8 @@ function init() {
 				
          	}
 			function UpdateFilter() {
-			if(navigator.appName == "Microsoft Internet Explorer")
+			browserIsIE = typeof document.documentMode == "number" || new Function("return/*@cc_on!@*/!1")();
+			if(browserIsIE === true)
 			{	
 			window.document.execCommand('Stop');
 			}
@@ -322,6 +353,8 @@ function init() {
 				var capa_a = annuals.value;
 				var capa_t = "trends_" + v_trends.value;
 				var vlayer = map.getLayersByName(capa)[0];
+				var lname= vlayer.params ["LAYERS"];
+				var leyenda= "<img src='/geoserver/gcm/wms?service=WMS&version=1.3.0&request=getlegendgraphic&layer="+lname+"&format=image/png&style="+lname+"&width=12&height=12'/>";
 				var vlayerold = map.getLayersByName(oldind)[0];
 				var vlayer_n = map.getLayersByName(capa_n)[0];
 				var vlayer_a = map.getLayersByName(capa_a)[0];
@@ -344,9 +377,11 @@ function init() {
 				vlayer_n.setVisibility(false);
 				vlayer.setVisibility(true);
 				vlayer_t.setVisibility(false);
+				updateleyenda(leyenda);
          	}
 			function UpdateFilter_a() {
-			if(navigator.appName == "Microsoft Internet Explorer")
+			browserIsIE = typeof document.documentMode == "number" || new Function("return/*@cc_on!@*/!1")();
+			if(browserIsIE === true)
 			{	
 			window.document.execCommand('Stop');
 			}
@@ -373,6 +408,8 @@ function init() {
 				var vlayerold_a = map.getLayersByName(old_a)[0];
 				var vlayer_t = map.getLayersByName(capa_t)[0];					
 				var vagno = agno_a.value;
+				var lname= vlayer_a.params ["LAYERS"];
+				var leyenda= "<img src='/geoserver/gcm/wms?service=WMS&version=1.3.0&request=getlegendgraphic&layer="+lname+"&format=image/png&style="+lname+"&width=12&height=12'/>";
 				var filter = "agno = "+ vagno;
 				//sin datos
 
@@ -390,9 +427,11 @@ function init() {
 				vlayer_n.setVisibility(false);
 				vlayer_a.setVisibility(true);
 				vlayer_t.setVisibility(false);
+				updateleyenda(leyenda);
          	}
 			function UpdateFilter_n() {
-			if(navigator.appName == "Microsoft Internet Explorer")
+			browserIsIE = typeof document.documentMode == "number" || new Function("return/*@cc_on!@*/!1")();
+			if(browserIsIE === true)
 			{	
 			window.document.execCommand('Stop');
 			}
@@ -419,7 +458,9 @@ function init() {
 				var vlayerold_n = map.getLayersByName(old_n)[0];
 				var vlayer = map.getLayersByName(capa)[0];
 				var vlayer_a = map.getLayersByName(capa_a)[0];
-				var vlayer_t = map.getLayersByName(capa_t)[0];				
+				var vlayer_t = map.getLayersByName(capa_t)[0];
+				var lname= vlayer_n.params ["LAYERS"];
+				var leyenda= "<img src='/geoserver/gcm/wms?service=WMS&version=1.3.0&request=getlegendgraphic&layer="+lname+"&format=image/png&style="+lname+"&width=12&height=12'/>";
 				var filter_n = "mes = " + vmes_n + " AND period = " + vperiod_n + " AND n_period = 30";
                 // by default, reset all filters
                 var filterParams = {
@@ -435,10 +476,12 @@ function init() {
 				vlayer_a.setVisibility(false);
 				vlayer_n.setVisibility(true);
 				vlayer_t.setVisibility(false);
+				updateleyenda(leyenda);
          	}
 			
 			function UpdateFilter_t() {
-			if(navigator.appName == "Microsoft Internet Explorer")
+			browserIsIE = typeof document.documentMode == "number" || new Function("return/*@cc_on!@*/!1")();
+			if(browserIsIE === true)
 			{	
 			window.document.execCommand('Stop');
 			}
@@ -468,6 +511,8 @@ function init() {
 				var vlayer = map.getLayersByName(capa)[0];
 				var vlayer_a = map.getLayersByName(capa_a)[0];
 				var vlayerold_t = map.getLayersByName(old_t)[0];
+				var lname= vlayer_t.params ["LAYERS"];
+				var leyenda= "<img src='/geoserver/gcm/wms?service=WMS&version=1.3.0&request=getlegendgraphic&layer="+lname+"&format=image/png&style="+lname+"&width=12&height=12'/>";
 				var filter_t = "cod_variable = " + vtrend + " AND period = " + ptrend;
                 // by default, reset all filters
                 var filterParams = {
@@ -484,6 +529,7 @@ function init() {
 				vlayer_n.setVisibility(false);
 				vlayerold_t.setVisibility(false);
 				vlayer_t.setVisibility(true);
+				updateleyenda(leyenda);
          	}			
 
 			function testLayer() {
@@ -493,10 +539,10 @@ function init() {
 			var actdate = new Date();
 			var actmonth = actdate.getMonth();
 			var actyear = actdate.getFullYear();
-			if (Number(vagno) >= 2015 && Number(vmes) > 0) {
-			alert ("There is no data for selected layer/month/year.\n------------------------------\nPlease, modify your selection.\n------------------------------\nFrom January 2012, only layers of monthly rainfall,mean temperature and their anomalies are available.");
-				}
-			else if (Number(vagno) >= 2014 && capa !== "Monthly precipitation" && capa !== "Monthly precipitation anomalies" && capa !== "Monthly precipitation anomalies p" && capa !== "Monthly temperature" && capa !== "Monthly temperature anomalies") {
+			if (Number(vagno) >= actyear && Number(vmes) > actmonth) {
+				alert ("Please, select a proper year/month.");
+			}
+			else if (Number(vagno) >= 2013 && capa !== "Monthly precipitation" && capa !== "Monthly precipitation anomalies" && capa !== "Monthly precipitation anomalies p" && capa !== "Monthly temperature" && capa !== "Monthly temperature anomalies") {
 			alert ("There is no data for selected layer/month/year.\n------------------------------\nPlease, modify your selection.\n------------------------------\nFrom January 2012, only layers of monthly rainfall,mean temperature and their anomalies are available.");
 				};
 			}
