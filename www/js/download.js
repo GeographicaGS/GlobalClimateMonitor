@@ -55,10 +55,18 @@ $(document).ready(function() {
 		$(".fancyDownload div[type='picture']").removeClass('active');
 		$(".fancyDownload div[type=" + $(this).val() + "]").addClass('active');
 
-		if($(this).val() == 'data'){
+		if($(this).val() == 'data' && !$(".fancyDownload input[value='shape']").is(':checked') && !$(".fancyDownload input[value='kml_p']").is(':checked')){
 			$('#monthSelectTo, #yearSelectTo, #byAnnualYearSelectTo, .fancyDownload .downloadMonth i').removeClass('hide');
 		}else{
 			$('#monthSelectTo, #yearSelectTo, #byAnnualYearSelectTo, .fancyDownload .downloadMonth i').addClass('hide');
+		}
+	});
+
+	$(".fancyDownload input[name='fileTypeData']").change(function(e) {
+		if($(".fancyDownload input[value='shape']").is(':checked') || $(".fancyDownload input[value='kml_p']").is(':checked')){
+			$('#monthSelectTo, #yearSelectTo, #byAnnualYearSelectTo, .fancyDownload .downloadMonth i').addClass('hide');
+		}else{
+			$('#monthSelectTo, #yearSelectTo, #byAnnualYearSelectTo, .fancyDownload .downloadMonth i').removeClass('hide');
 		}
 	});
 
@@ -67,6 +75,10 @@ $(document).ready(function() {
 		var filter = '';
 		var timeType = $(".fancyDownload input[name='timeType']:checked").val();
 		var type = $(".fancyDownload input[name='type']:checked").val();
+		var range = false;
+		if(type == 'data' && !$(".fancyDownload input[value='shape']").is(':checked') && !$(".fancyDownload input[value='kml_p']").is(':checked')){
+			range = true;
+		}
 		
 		if(timeType == 'indicador'){
 			var yearFrom = $(".fancyDownload #yearSelectFrom").val();
@@ -74,7 +86,8 @@ $(document).ready(function() {
 			var yearTo = $(".fancyDownload #yearSelectTo").val();
 			var monthTo = $(".fancyDownload #monthSelectTo").val();
 			filter = '';	
-			if(type=='data'){
+			// if(type=='data'){
+			if(range){
 				if(yearFrom == yearTo){
 					filter = 'mes >= ' + monthFrom + ' AND mes <= ' + monthTo + ' AND agno =' + yearTo
 				}else{
@@ -97,7 +110,8 @@ $(document).ready(function() {
 			var yearFrom = $(".fancyDownload #byAnnualYearSelectFrom").val();
 			var yearTo = $(".fancyDownload #byAnnualYearSelectTo").val();
 			filter = '';
-			if(type=='data'){
+			// if(type=='data'){
+			if(range){
 				for(var i=yearFrom; i<= yearTo; i++){
 					filter += 'agno = ' + i;
 					if(i != yearTo){
@@ -120,7 +134,9 @@ $(document).ready(function() {
 
 		// var extent = map.getExtent();
 		// var bbox = extent.toBBOX().split(",");
-		if(type=='data'){
+		
+		// if(type=='data'){
+		if(range){
 			var bbox = downloadBound.toBBOX().split(",");
 		}else{
 			var bbox = downloadBoundPicture.toBBOX().split(",");
@@ -131,7 +147,8 @@ $(document).ready(function() {
 		var y2 = bbox [3];
 
 
-		if(type=='data'){
+		// if(type=='data'){
+		if(range){
 			var layerName = layer.params["LAYERS"] + "_old";
 			var fileType =$(".fancyDownload input[name='fileTypeData']:checked").val();
 			var filter = 'BBOX%28geom' + ',' + x1 + ',' + y1 + ',' + x2 + ',' + y2 + '%29AND%28' + filter + '%29';	
@@ -140,7 +157,11 @@ $(document).ready(function() {
 		}else{
 
 			var layerName = layer.params["LAYERS"];
-			var fileType =$(".fancyDownload input[name='fileTypePicture']:checked").val();
+			if(type=="data"){
+				var fileType =$(".fancyDownload input[name='fileTypeData']:checked").val();
+			}else{
+				var fileType =$(".fancyDownload input[name='fileTypePicture']:checked").val();
+			}
 			
 			if(fileType == 'tiff' || fileType == 'jpg' || fileType == 'shape'){
 				if(fileType == 'shape'){
@@ -212,7 +233,8 @@ $(document).ready(function() {
 			}
 		}
 
-		if(type=='data' && (timeType == 'indicador' || timeType == 'annuals')){
+		// if(type=='data' && (timeType == 'indicador' || timeType == 'annuals')){
+		if(range && (timeType == 'indicador' || timeType == 'annuals')){
 			var columnNumbers = (downloadBound.right - downloadBound.left)/0.5;
 			var rowNumbers = (downloadBound.top - downloadBound.bottom)/0.5;
 			var points = columnNumbers * rowNumbers;
@@ -321,7 +343,7 @@ $(document).ready(function() {
         	box.deactivate()
         	downloadBoundPicture = bbox.getBounds();
         	downloadBound = bbox.getBounds().clone().transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
-        	showFancyDownload();
+        	showFancyDownload('bounding');
         };
 	});
 
@@ -334,7 +356,7 @@ $(document).ready(function() {
 		downloadBoundPicture.extend(lonlatTo);
 		downloadBoundPicture.extend(lonlatFrom);
 		downloadBound = downloadBoundPicture.clone().transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
-		showFancyDownload();
+		showFancyDownload('map');
 	});
 
 	$("#ctrl_download").click(function(e) {
@@ -382,12 +404,26 @@ function clickDownloadPoint(e){
 	downloadBound.extend(lonlatTo);
 	downloadBound.extend(lonlatFrom);
 
-	showFancyDownload();
+	showFancyDownload('point');
 	map.events.unregister("click", map,clickDownloadPoint);
 }
 
-function showFancyDownload(){
+function showFancyDownload(type){
 	$.fancybox($(".fancyDownload"),{
+				beforeShow: function () {
+					if(type == 'point'){
+						$(".fancyDownload input[value='shape']").addClass('hide');
+						$(".fancyDownload input[value='shape']").next('label').addClass('hide');
+						$(".fancyDownload input[value='kml_p']").addClass('hide');
+						$(".fancyDownload input[value='kml_p']").next('label').addClass('hide');
+						$(".fancyDownload input[value='csv']").trigger('click');
+					}else{
+						$(".fancyDownload input[value='shape']").removeClass('hide');
+						$(".fancyDownload input[value='shape']").next('label').removeClass('hide');
+						$(".fancyDownload input[value='kml_p']").removeClass('hide');
+						$(".fancyDownload input[value='kml_p']").next('label').removeClass('hide');
+					}
+				},
 				afterClose: function () {
 					$("#ctrl_download_options li").removeClass('active');
 					$("#ctrl_download").removeClass('active');
