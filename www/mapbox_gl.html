@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title></title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.14.3/mapbox-gl.js'></script>
+    <script src="https://code.jquery.com/jquery-2.2.1.min.js"></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.14.3/mapbox-gl.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; -z-index: 1}
+        #co_selector { position:absolute; top:20px; left:20px; width:300px; z-index: 2}
+        #co_selector select {width: 40%;}
+        #co_selector select[name='variable'] {width: 100%;}
+
+    </style>
+</head>
+<body>
+
+<div id='map'></div>
+<div id='co_selector'>
+
+    <select name='variable'>
+        <option value='pre'>Montly rainfall</option>
+        <option value='temp'>Montly temperature</option>
+    </select>
+    <select name='year'></select>
+    <select name='month'></select>
+</div>
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1IjoiYWxhc2FyciIsImEiOiJjaWw3cXd5aGQwMDBpd3lsenB5MXNjcWlyIn0.dgWuskErQlfhZzEMQqY_jg';
+var map = new mapboxgl.Map({
+    container: 'map', // container id
+    style: 'mapbox://styles/mapbox/streets-v8', //stylesheet location
+    center: [0,0], // starting position
+    zoom: 1 // starting zoom
+});
+
+var $year = $('select[name="year"]'),
+    $month = $('select[name="month"]'),
+    $variable = $('select[name="variable"]');
+// fill combo year
+for (var i=1901;i<=2015;i++){
+    $year.append('<option value=' + i + '>'+i+'</option>');
+}
+
+// fill combo month
+for (var i=1;i<=12;i++){
+    var t = i<10 ? '0'+i : i;
+    $month.append('<option value=' + t + '>'+t+'</option>');
+}
+
+$month.val('12');
+$year.val('2015');
+$variable.val('pre');
+
+var dataObj = {
+    _map : map,
+    _nlayers: 0,
+    _baseUrl: 'http://globalclimatemonitor.org/mapbox/splitdata',
+    _gridURL: 'http://globalclimatemonitor.org/mapbox/grid.geojson',
+    _getGrid : function(cb){
+        var that = this;
+        $.getJSON(this._gridURL,function(d){
+            that._grid = d;
+            cb.apply(that);
+        });
+    },
+
+    _getVarData: function(){
+        var that = this;
+        $.getJSON(this._baseUrl+'/'+ this._variable + '/' + this._year + this._month + '.json',function(d){
+            that._render(d);
+        });
+    },
+
+    _getColorIdx: function(d){
+        var layers = this._getColors();
+
+        for (var i=1;i<layers.length;i++){
+            if (d<=layers[i][1]){
+                return i-1;
+            }
+        }
+
+        if (d>layers[layers.length-1][1])
+            return layers.length-1;
+
+        return -1;
+    },
+
+    _getColors: function(){
+        if (this._variable=='pre')
+            return [
+                ['#edf8b1',0],
+                ['#c7e9b4',5],
+                ['#7fcdbb',20],
+                ['#41b6c4',40],
+                ['#1d91c0',100],
+                ['#225ea8',150],
+                ['#253494',250],
+                ['#081d58',500]
+            ];
+        else if (this._variable=='temp')
+            return [
+                ['#053061',-10000],
+                ['#2166ac',-40],
+                ['#4393c3',-30],
+                ['#92c5de',-20],
+                ['#d1e5f0',-10],
+                ['#fddbc7',0],
+                ['#f4a582',10],
+                ['#d6604d',20],
+                ['#b2182b',30],
+                ['#67001f',40]
+            ];
+    },
+
+    _render: function(data){
+        var map = this._map, that = this;
+
+        // it sounds odd to me, but to assign a color to each polygon we need to create several layers: https://www.mapbox.com/mapbox-gl-js/example/updating-choropleth/
+        var layers = this._getColors();
+
+        // add styles
+        for (var i=0;i<this._grid.features.length;i++){
+            this._grid.features[i].properties.color_idx = this._getColorIdx(data[this._grid.features[i].properties.i]);
+        }
+
+        if (map.getSource("markers"))
+            map.removeSource("markers")
+        
+        map.addSource("markers", {
+            "type": "geojson",
+            "data":  this._grid
+        });
+
+        for (var i=0;i< this._nlayers;i++){
+            map.removeLayer("layer-" + i);
+        }
+
+        this._nlayers = layers.length;
+
+        layers.forEach(function(layer, i) {
+            var id= "layer-" + i;
+
+            map.addLayer({
+                "id": "layer-" + i,
+                "interactive": true,
+                "type": "circle",
+                "source": "markers",
+                "paint": {
+                    "circle-color": layer[0],
+                    "circle-radius":  {
+                        "base": 1,
+                        "stops": [[1, 1], [10, 8]]
+                    }
+                },
+                "filter": ["==","color_idx",i]
+            });
+        });
+
+    },
+    render: function(variable,year,month){
+        this._variable = variable;
+        this._year = year;
+        this._month = month;
+        if (!this._grid)
+            this._getGrid(this._getVarData);
+        else
+            this._getVarData();  
+    }
+};
+
+function loadVariable(){
+    var year = $year.val();
+    var month = $month.val();
+    var variable = $variable.val();
+
+    dataObj.render(variable,year,month);
+}
+
+$year.change(loadVariable);
+$month.change(loadVariable);
+$variable.change(loadVariable);
+
+loadVariable();
+
+</script>
+
+</body>
+</html>
