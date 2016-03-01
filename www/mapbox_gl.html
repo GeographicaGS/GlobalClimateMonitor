@@ -60,7 +60,7 @@ var dataObj = {
     _map : map,
     _nlayers: 0,
     _baseUrl: 'http://globalclimatemonitor.org/mapbox/splitdata',
-    _gridURL: 'http://globalclimatemonitor.org/mapbox/grid.geojson',
+    _gridURL: 'http://globalclimatemonitor.org/mapbox/splitdata/grid.json',
     _getGrid : function(cb){
         var that = this;
         $.getJSON(this._gridURL,function(d){
