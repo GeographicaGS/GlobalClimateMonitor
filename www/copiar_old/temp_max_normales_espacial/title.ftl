@@ -1,1 +1,0 @@
-Monthly normal maximum temperature

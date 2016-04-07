@@ -43,7 +43,7 @@ var tour = new Tour({
       {
     element: "#dialog1a",
     title: "Monthly maps",
-	  content: "Here you will find the maps of the monthly values. As soon as you select a variable or change the month or year, the map will be updated.<br /><br /> The layer info button provides information about the variable to be displayed.",
+	  content: "Here you will find the layers of monthly values. As soon as you select a variable or change the month or year, the map will be updated.<br /><br /> The layer info button provides information about the variable to be displayed.",
 	animation: true,
 	onShow: function () {
 		$('nav ul li.expanded').removeClass('expanded').children('.controls').eq(0).slideUp();
@@ -53,7 +53,7 @@ var tour = new Tour({
       {
     element: "#dialog2a",
     title: "Annual maps",
-    content: "Here you will find the maps of the annual values.",
+    content: "Here you will find the layers of the annual values.",
 	animation: true,
 	onShow: function () {
 		$('nav ul li.expanded').removeClass('expanded').children('.controls').eq(0).slideUp();
@@ -87,7 +87,7 @@ var tour = new Tour({
       {
     element: "#legend",
     title: "The legend",
-    content: "The collapsible legend is updated automatically. You can set the transparency of the visible layer using the slider at the bottom. Click the icon button on the left side to switch between point/polygon symbols",
+    content: "The collapsible legend is updated automatically. You can set the transparency of the visible layer using the slider at the bottom.",
 	animation: true,
 	onShow: function () {
 		$("#legend_h3").addClass("contracted");

@@ -1,3 +1,0 @@
-zip=Mean_Temperature_Trends
-shp=Mean_Temperature_Trends
-txt=wfsrequest

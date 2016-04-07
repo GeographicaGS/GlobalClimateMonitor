@@ -1,1 +1,0 @@
-Annual maximum temperature anomaly

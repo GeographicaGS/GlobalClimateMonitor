@@ -57,7 +57,7 @@ function updateLegend() {
 	var layname = $( "#variable" ).val();
 //	var img = document.createElement('img');
 //    img.src = '/geoserver/gcm/wms?service=WMS&version=1.3.0&request=getlegendgraphic&layer='+layname+'&format=image/png&style=&width=12&height=12';
-	$( "#leyendacapa img" ).replaceWith( "<img src='/geoserver/gcm/wms?service=WMS&version=1.3.0&request=getlegendgraphic&layer="+layname+"&format=image/png&style=&width=12&height=12'/>" );
+	$( "#leyendacapa img" ).replaceWith( "<img src='/geoserver/gcm/wms?service=WMS&version=1.3.0&request=getlegendgraphic&layer="+layname+ "&format=image/png&style=" + layname +"&width=12&height=12'/>" );
 	}
 //scripts
 /**

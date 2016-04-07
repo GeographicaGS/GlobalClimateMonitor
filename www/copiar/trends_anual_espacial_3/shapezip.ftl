@@ -1,3 +1,0 @@
-zip=Minimum_Temperature_Trends
-shp=Minimum_Temperature_Trends
-txt=wfsrequest

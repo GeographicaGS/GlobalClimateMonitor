@@ -24,9 +24,11 @@
         <link rel="stylesheet" href="css/base.css"/>
         <link rel="stylesheet" href="css/main.css"/>
         <link rel="stylesheet" href="css/download.css"/>
+	<link rel="stylesheet" href="css/jquery.peekabar.min.css">
 
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 		<script src="js/bootstrap-tour-standalone.min.js"></script>
+	<script src="js/jquery.peekabar.min.js"></script>
 
         <link rel="stylesheet" href="fancybox/jquery.fancybox.css?v=2.1.5" type="text/css" media="screen" />
 		<link rel="stylesheet" href="css/bootstrap-tour-standalone.min.css">
@@ -101,8 +103,8 @@
             </div>
 
             <div class="keypad">
-                <input type="button" value="Download">
-                <a href="#">Close</a>
+                <input type="button" name="Download" value="Download">
+                <input type="button" name="Close" value="Close">
             </div>
         </div>
 
@@ -116,6 +118,7 @@
 				<div id="tools1"><a id="ctrl_fullex_ctrl" title="Zoom to full extent"></a></div>
 				<a id="ctrl_zbox_ctrl" href="#" class="" title="Zoom to box"></a>
 				<a id="ctrl_info_ctrl" href="#" class="" title="Click on a point to get value"></a>
+				<a id="ctrl_station_ctrl" href="#" class="" title="Click to switch to number of stations map for this variable and month"></a>
 				<!-- <a id="ctrl_info_capa_ctrl" href="#" class="" title="Click to get layer info"></a> -->
 				<a id="ctrl_play" href="#" class="" title="Click to open animation of normals in a new window"></a>
 
@@ -165,9 +168,9 @@
             <aside id="legend">
                 <h3 id="legend_h3">Legend</h3>
                 <div id="leyendacapa" class="content" style="padding-left: 60px;padding-top: 10px;padding-bottom: 10px;"></div>
-                <a id="ctrl_sym" href="#" class="" title="Click to switch symbology"></a>
+                <a id="ctrl_sym" href="#" class="" title="Click to switch symbology (This functionnality is temporarily unavailable)"></a>
                 <div id="slider" class="slider">
-                    <form oninput="level.value = flevel.valueAsNumber">
+                    <form> <!--oninput="level.value = flevel.valueAsNumber"-->
                         <label for="slider_opacity">Transparency</label>
                         <input name="flevel" id="slider_opacity" type="range" min="0" max="100" value="0" onchange="updateTransparency(this.value)"> 
                         <!-- <output for="slider_opacity" name=level>0</output>% -->
@@ -176,11 +179,9 @@
             </aside>		
             <footer id="credits">
                 <span>
-                    <b>Data source:</b> <a href="http://catalogue.ceda.ac.uk/uuid/3f8944800cc48e1cbc29a5ee12d8542d" target="_blank">CRU TS 3.21,</a>@Climatic Research Unit, University of East Anglia,
-								 <a href="http://www.ncdc.noaa.gov/temp-and-precip/ghcn-gridded-products.php" target="_blank">GHCN,</a>@NOAA,
-				</span>
+                    <b>Data source:</b>@Climatic Research Unit, University of East Anglia:<a href="http://catalogue.ceda.ac.uk/uuid/3f8944800cc48e1cbc29a5ee12d8542d" target="_blank">CRU TS 3.21</a>@NOAA:<a href="http://www.ncdc.noaa.gov/temp-and-precip/ghcn-gridded-products.php" target="_blank">GHCN</a>@DWD:<a href="http://dx.doi.org/10.5676/DWD_GPCC/FG_M_100" target="_blank">GPCC</a></span>
                 <span>
-                    made available under the <a href="http://opendatacommons.org/licenses/odbl/1.0/" target="_blank">Open Database License</a>
+                    made available under the <a href="http://opendatacommons.org/licenses/odbl/1.0/" target="_blank">ODL</a>
                 </span>
             </footer>
         </div>
@@ -203,7 +204,7 @@
                     <li id="diag1" class="expanded">
                         <h2><span id="dialog1a" class="light">By</span> Monthly values</h2>
                         <div id="dialog1" class="controls">
-                            <select id="indicador" layer onfocus="UpdateFilter(); this.oldvalue = this.value;" onchange="UpdateFilter(this);this.oldvalue = this.value; testLayer();">
+                            <select id="indicador" layer onfocus="UpdateFilter(); this.oldvalue = this.value; deactivate_stations();" onchange="UpdateFilter(this);this.oldvalue = this.value; testLayer(); deactivate_stations();">
                                 <option value="Monthly precipitation" selected>Monthly rainfall</option>
                                 <option value="Monthly precipitation anomalies">Monthly rainfall anomalies</option>
                                 <option value="Monthly precipitation anomalies p">Monthly relative rainfall anomalies (%)</option>
@@ -219,13 +220,13 @@
                                 <option value="Monthly etp anomalies">Monthly potential evapotranspiration anomalies</option>
                                 <option value="Monthly etp anomalies p">Monthly relative potential evapotranspiration anomalies (%)</option>
                             </select>
-                            <select id="mes" onchange="UpdateFilter(); testLayer();">
+                            <select id="mes" onchange="UpdateFilter(); testLayer(); deactivate_stations();">
                                 <option value="1">January</option>
-                                <option value="2">February</option>
+                                <option value="2"selected>February</option>
                                 <option value="3">March</option>
                                 <option value="4">April</option>
                                 <option value="5">May</option>
-                                <option value="6"selected>June</option>
+                                <option value="6">June</option>
                                 <option value="7">July</option>
                                 <option value="8">August</option>
                                 <option value="9">September</option>
@@ -233,12 +234,13 @@
                                 <option value="11">November</option>
                                 <option value="12">December</option>                        
                             </select>
-                            <select id="agno" onchange="UpdateFilter(); testLayer();">
-							    <option value="2015" selected>2015</option>
+                            <select id="agno" onchange="UpdateFilter(); testLayer(); deactivate_stations();">
+				<option value="2016" selected>2016</option>
+				<option value="2015">2015</option>
                                 <option value="2014">2014</option>
-								<option value="2013">2013</option>
+				<option value="2013">2013</option>
                                 <option value="2012">2012</option>
-								<option value="2011">2011</option>
+				<option value="2011">2011</option>
                                 <option value="2010">2010</option>
                                 <option value="2009">2009</option>
                                 <option value="2008">2008</option>
@@ -359,10 +361,8 @@
                         <h2><span id="dialog2a">By</span> Annual values</h2>
                         <div id="dialog2" class="controls">
                             <select id="annuals" layer  onfocus="UpdateFilter_a(); this.oldvalue = this.value;" onchange="UpdateFilter_a(this);
-                                            this.oldvalue = this.value; testLayer_a();">
-                                <option value="Seasonality Index">Seasonality Index</option>
-                                <option disabled>──────────</option>
-                                <option value="Annual precipitation">Annual rainfall</option>
+                                            this.oldvalue = this.value; testLayer_a();">                               
+                                <option value="Annual precipitation" selected>Annual rainfall</option>
                                 <option value="Annual precipitation anomalies">Annual rainfall anomalies</option>
                                 <option disabled>──────────</option>
                                 <option value="Annual mean temperature">Annual mean temperature</option>
@@ -374,12 +374,15 @@
                                 <option disabled>──────────</option>
                                 <option value="Annual etp">Annual PET</option>
                                 <option value="Annual etp anomalies">Annual PET anomalies</option>
+								<option disabled>──────────</option>
+								<option value="Seasonality Index">Seasonality Index</option>
                             </select>
-                            <select id="mes_a"> 
+<!--                         <select id="mes_a"> 
                                 <option disabled>─</option>				
-                            </select>
-                            <select id="agno_a" onchange="UpdateFilter_a(); testLayer_a();">
-                                <option value="2014" selected>2014</option>
+                            </select>-->
+                            <select id="agno_a" style="float:none !important;" onchange="UpdateFilter_a(); testLayer_a();">
+                                <option value="2015" selected>2015</option>
+								<option value="2014">2014</option>
 								<option value="2013">2013</option>
                                 <option value="2012">2012</option>
 								<option value="2011">2011</option>
@@ -502,7 +505,7 @@
                     <li id="diag3">
                         <h2><span id="dialog3a">By</span> Normals</h2>
                         <div id="dialog3" class="controls">
-                            <select id="normals" layer onfocus="UpdateFilter_n(); this.oldvalue = this.value;" onchange="UpdateFilter_n(this);
+                            <select id="normals" layer onfocus="UpdateFilter_n(); this.oldvalue = this.value; deactivate_stations();" onchange="UpdateFilter_n(this);
                                             this.oldvalue = this.value;">
                                 <option value="Monthly precipitation normals">Monthly rainfall</option>
                                 <option disabled>──────────</option>
@@ -513,7 +516,7 @@
                                 <option value="Monthly etp normals">Monthly potential evapotranspiration</option>
                             </select>
                             <select id="mes_n" onchange="UpdateFilter_n();">
-                                <option value="1" selected="selected">January</option>
+                                <option value="1" selected>January</option>
                                 <option value="2">February</option>
                                 <option value="3">March</option>
                                 <option value="4">April</option>
@@ -531,7 +534,7 @@
                                 <option value="16">Summer</option>  								
                             </select>
                             <select id="period_n" onchange="UpdateFilter_n();" class="mb">
-                                <option value="1930" selected="selected">1901-1930</option>
+                                <option value="1930" selected>1901-1930</option>
                                 <option value="1940">1911-1940</option>
                                 <option value="1950">1921-1950</option>
                                 <option value="1960">1931-1960</option>
@@ -548,18 +551,18 @@
                     <li id="diag4">
                         <h2><span id="dialog4a">By</span> Trends</h2>
                         <div id="dialog4" class="controls">
-                            <select id="v_trends" layer  onfocus="UpdateFilter_t(); this.oldvalue = this.value;" onchange="UpdateFilter_t(this);this.oldvalue = this.value;">
+                            <select id="v_trends" layer  onfocus="UpdateFilter_t(); this.oldvalue = this.value; deactivate_stations();" onchange="UpdateFilter_t(this);this.oldvalue = this.value;">
                                 <option value="1">Rainfall</option>
                                 <option value="2">Mean temperatures</option>
                                 <option value="3">Minimum temperatures</option>
                                 <option value="4">Maximum temperatures</option>		
                                 <option value="5">Potential Evapotranspiration</option>										
                             </select>
-                            <select id="mes_t"> 
+<!--                        <select id="mes_t"> 
                                 <option disabled>─</option>				
-                            </select>
-                            <select id="period_t" onchange="UpdateFilter_t();">
-                                <option value="1" selected="selected">1901-2012</option>
+                            </select>-->
+                            <select id="period_t" style="float:none !important;" onchange="UpdateFilter_t();">
+                                <option value="1" selected>1901-2012</option>
                                 <option value="2">1901-1950</option>
                                 <option value="3">1951-2012</option>
                             </select>
@@ -612,6 +615,7 @@
         <script src="http://maps.google.com/maps/api/js?sensor=false&amp;v=3.7"></script>
         <script src="js/scripts.js"></script>
 		<script src="js/guided_tour.js"></script>
+		<script src="js/ClickLayerInfo.js"></script>		
         <script src="js/download.js"></script>
 
         <script>

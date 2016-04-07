@@ -1,3 +1,0 @@
-zip=Monthly_rainfall_anomalies
-shp=Monthly_rainfall_anomalies
-txt=wfsrequest

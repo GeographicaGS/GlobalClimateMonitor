@@ -15,6 +15,7 @@ var box = new OpenLayers.Control.DrawFeature(vectors, OpenLayers.Handler.Regular
 
 var downloadBound;
 var downloadBoundPicture;
+var downloadBoundPoint;
 
 
 $(document).ready(function() {
@@ -70,7 +71,11 @@ $(document).ready(function() {
 		}
 	});
 
-	$(".fancyDownload input[type='button']").click(function(e) {
+	$(".fancyDownload input[name='Close']").click(function(e) {
+	parent.$.fancybox.close();
+	})
+
+	$(".fancyDownload input[name='Download']").click(function(e) {
 		var layer = map.getLayersByName($(".fancyDownload .variableDownload").val())[0];
 		var filter = '';
 		var timeType = $(".fancyDownload input[name='timeType']:checked").val();
@@ -129,27 +134,39 @@ $(document).ready(function() {
 
 		}else if(timeType == 'v_trends'){
 			var year = $(".fancyDownload .trendSelect").val();
-			filter = 'cod_variable = 1 AND period = ' + year;
+			var capa = $(".fancyDownload .variableDownload").val();
+			n_trend = capa.substr(capa.length - 1);
+			filter = 'cod_variable =' + n_trend + ' AND period = ' + year;
 		}
 
 		// var extent = map.getExtent();
 		// var bbox = extent.toBBOX().split(",");
 		
 		// if(type=='data'){
-		if(range){
+/*		if(range){
 			var bbox = downloadBound.toBBOX().split(",");
 		}else{
 			var bbox = downloadBoundPicture.toBBOX().split(",");
 		}
-		var x1 = bbox [0];
-		var x2 = bbox [2];
-		var y1 = bbox [1];
-		var y2 = bbox [3];
-
+*/
+		if ($("#ctrl_download_options .liPoint").hasClass('active')){
+			
+			var bbox = downloadBoundPoint.toBBOX().split(",");
+			var x1 = bbox [0];
+			var x2 = bbox [2];
+			var y1 = bbox [1];
+			var y2 = bbox [3];
+		}
+		else{
+			var bbox = downloadBoundPicture.toBBOX().split(",");
+			var x1 = bbox [0];
+			var x2 = bbox [2];
+			var y1 = bbox [1];
+			var y2 = bbox [3];		}
 
 		// if(type=='data'){
 		if(range){
-			var layerName = layer.params["LAYERS"] + "_old";
+			var layerName = layer.params["LAYERS"] + "_p";
 			var fileType =$(".fancyDownload input[name='fileTypeData']:checked").val();
 			var filter = 'BBOX%28geom' + ',' + x1 + ',' + y1 + ',' + x2 + ',' + y2 + '%29AND%28' + filter + '%29';	
 			var urlroot = 'http://www.globalclimatemonitor.org/geoserver/gcm/wfs?service=wfs&version=1.0.0&request=GetFeature&typeNames=gcm:';
@@ -167,15 +184,23 @@ $(document).ready(function() {
 				if(fileType == 'shape'){
 					var o_style= layer.params ["STYLES"];
 					var longcadena=o_style.length;
-					var last5= o_style.substring(longcadena, longcadena - 5);
-					if (last5 =="_poly") {
-						layerName = layer.params["LAYERS"];
+					var last7= o_style.substring(longcadena, longcadena - 7);
+					if (last7 =="_circle") {
+						layerName = layer.params["LAYERS"] + "_p";
+//						var extent2 = downloadBoundPicture.clone().transform(new OpenLayers.Projection('EPSG:900913'), new OpenLayers.Projection('EPSG:4326'));		
+//						extent2 = map.getExtent();
+//						bbox = extent2.toBBOX().split(",");
+						x1 = bbox [0];
+						x2 = bbox [2];
+						y1 = bbox [1];
+						y2 = bbox [3];
 						// bbox = extent.toBBOX();						
 					}
 					else {
-						layerName = layer.params["LAYERS"] + "_old";
-						var extent2 = downloadBoundPicture.clone().transform(new OpenLayers.Projection('EPSG:900913'), new OpenLayers.Projection('EPSG:4326'));
-						bbox = extent2.toBBOX().split(",");
+						layerName = layer.params["LAYERS"];
+//						var extent2 = downloadBoundPicture.clone().transform(new OpenLayers.Projection('EPSG:900913'), new OpenLayers.Projection('EPSG:4326'));
+//						extent2 = map.getExtent();
+//						bbox = extent2.toBBOX().split(",");
 						x1 = bbox [0];
 						x2 = bbox [2];
 						y1 = bbox [1];
@@ -201,18 +226,13 @@ $(document).ready(function() {
 			height = Math.round( height );
 
 			if(fileType == 'kml'){
-				restoparams = '&format_options=leyendaEND:true;SUPEROVERLAY:false;AUTOFIT:true;KMPLACEMARK:false;KMSCORE:0;KMATTR:true;MODE:refresh&WIDTH=2048&HEIGHT=' + height;
-				var urlroot = 'http://www.globalclimatemonitor.org/geoserver/gcm/wms?FORMAT=application/vnd.google-earth.kml+xml&REQUEST=GetMap&SRS=epsg:900913&STYLES=' + layer.params["STYLES"];
+				restoparams = '&format_options=legend:true;SUPEROVERLAY:false;AUTOFIT:true;KMPLACEMARK:false;KMSCORE:0;KMATTR:true;MODE:refresh&WIDTH=2048&HEIGHT=' + height;
+				var urlroot = 'http://www.globalclimatemonitor.org/geoserver/gcm/wms?FORMAT=application/vnd.google-earth.kml+xml&REQUEST=GetMap&SRS=epsg:900913&STYLES=' + layerName;
 				var url = urlroot + '&LAYERS='+ layerName + '&CQL_FILTER=' + filter + '&BBOX=' + bbox + restoparams;
 
 			}else if(fileType == 'kml_p'){
-				var style = layer.params["STYLES"];
-				var longcadena=style.length;
-				var last5= style.substring(longcadena, longcadena - 5);
-				if (last5!="_poly") {
-					style = style + "_kml";
-				}
-				restoparams = '&format_options=leyendaEND:true;SUPEROVERLAY:false;AUTOFIT:true;KMPLACEMARK:false;KMSCORE:100;KMATTR:true;MODE:refresh&WIDTH=1024&HEIGHT=' + height;
+				var style = layerName;
+				restoparams = '&format_options=legend:true;SUPEROVERLAY:false;AUTOFIT:true;KMPLACEMARK:false;KMSCORE:100;KMATTR:true;MODE:refresh&WIDTH=1024&HEIGHT=' + height;
 				var urlroot = 'http://www.globalclimatemonitor.org/geoserver/gcm/wms?FORMAT=application/vnd.google-earth.kml+xml&REQUEST=GetMap&SRS=epsg:900913&STYLES=' + style;
 				var url = urlroot + '&LAYERS='+ layerName + '&CQL_FILTER=' + filter + '&BBOX=' + bbox + restoparams;
 
@@ -222,7 +242,8 @@ $(document).ready(function() {
 				var url = urlroot + 'LAYERS='+ layerName + '&CQL_FILTER=' + filter + '&BBOX=' + bbox + restoparams;
 
 			}else if(fileType == 'jpg'){
-				restoparams = '&STYLES=' + layer.params["STYLES"] + '&WIDTH=2048&HEIGHT=' + height + '&format_options=dpi:150;layout:deco_' + layerName;
+			  //restoparams = '&STYLES=' + layer.params["STYLES"] + '&WIDTH=2048&HEIGHT=' + height + '&format_options=dpi:150;layout:deco_' + layerName;
+				restoparams = '&STYLES=' + layer.params["STYLES"] + '&WIDTH=2048&HEIGHT=' + height + '&format_options=dpi:150';
 				var urlroot = 'http://www.globalclimatemonitor.org/geoserver/gcm/wms/?FORMAT=image/jpeg&REQUEST=GetMap&SRS=epsg:900913&';
 				var url = urlroot + '&LAYERS='+ layerName + '&CQL_FILTER=' + filter + '&BBOX=' + bbox + restoparams;
 
@@ -234,7 +255,30 @@ $(document).ready(function() {
 		}
 
 		// if(type=='data' && (timeType == 'indicador' || timeType == 'annuals')){
-		if(range && (timeType == 'indicador' || timeType == 'annuals')){
+		var vagno = agno.value;
+		var capa = $(".fancyDownload .variableDownload").val();
+		var length_capa = capa.length;
+		var last7_capa = capa.substring(length_capa, length_capa - 7);
+		var first5_capa = capa.substring(0, 5);
+		var yfrom = yearSelectFrom.value;
+		var ayfrom = byAnnualYearSelectFrom.value;
+		var ayto = byAnnualYearSelectTo.value;
+		var yto = yearSelectTo.value;
+		var timeType = $(".fancyDownload input[name='timeType']:checked").val();
+		if (capa !== "Monthly precipitation" && capa !== "Monthly precipitation anomalies" && capa !== "Monthly precipitation anomalies p" && capa !== "Monthly temperature" && capa !== "Monthly temperature anomalies" && last7_capa !== "normals" && first5_capa !== "trend" && capa !== "Annual precipitation" && capa !== "Annual precipitation anomalies" && capa !== "Annual mean temperature" && capa !== "Annual mean temperature anomalies" && (timeType == 'annuals' && ayfrom >= 2013)) {
+			alert ("There is no data for selected layer/month/year.\n------------------------------\nPlease, modify your selection.\n------------------------------\nFrom January 2013, only layers of monthly rainfall,mean temperature and their anomalies are available.");
+		}
+		else if (capa !== "Monthly precipitation" && capa !== "Monthly precipitation anomalies" && capa !== "Monthly precipitation anomalies p" && capa !== "Monthly temperature" && capa !== "Monthly temperature anomalies" && last7_capa !== "normals" && first5_capa !== "trend" && capa !== "Annual precipitation" && capa !== "Annual precipitation anomalies" && capa !== "Annual mean temperature" && capa !== "Annual mean temperature anomalies" && (timeType !== 'annuals' &&yfrom >= 2013)) {
+			alert ("There is no data for selected layer/month/year.\n------------------------------\nPlease, modify your selection.\n------------------------------\nFrom January 2013, only layers of monthly rainfall,mean temperature and their anomalies are available.");
+		}
+		else if(range && (timeType == 'indicador' || timeType == 'annuals')){
+			if (timeType == 'indicador' && capa !== "Monthly precipitation" && capa !== "Monthly precipitation anomalies" && capa !== "Monthly precipitation anomalies p" && capa !== "Monthly temperature" && capa !== "Monthly temperature anomalies" && ( yfrom >= 2013 || yto >= 2013 )) {
+			alert ("There is no data for selected layer/month/year.\n------------------------------\nPlease, modify your selection.\n------------------------------\nFrom January 2013, only layers of monthly rainfall,mean temperature and their anomalies are available.");
+			}
+			else if (timeType == 'annuals'&& capa !== "Annual precipitation" && capa !== "Annual precipitation anomalies" && capa !== "Annual mean temperature" && capa !== "Annual mean temperature anomalies" && ( ayfrom >= 2013 || ayto >= 2013 )) {
+			alert ("There is no data for selected layer/month/year.\n------------------------------\nPlease, modify your selection.\n------------------------------\nFrom January 2013, only layers of monthly rainfall,mean temperature and their anomalies are available.");
+			}
+			else{ 
 			var columnNumbers = (downloadBound.right - downloadBound.left)/0.5;
 			var rowNumbers = (downloadBound.top - downloadBound.bottom)/0.5;
 			var points = columnNumbers * rowNumbers;
@@ -253,8 +297,10 @@ $(document).ready(function() {
 			}
 			if(diffDate * points > 500000){
 				alert("The download is limited to a maximum of 500000 rows per request. Please, try redefining you download options");
-			}else{
+			}
+			else{
 				window.open(url);	
+			}
 			}
 		}else{
 			window.open(url);
@@ -398,12 +444,18 @@ function clickDownloadPoint(e){
 	var column = Math.floor(lonlat.lat / 0.5);
 	row = row * 0.5;
 	column = column * 0.5;
-	lonlatTo = new OpenLayers.LonLat(row,column);
-	lonlatFrom = new OpenLayers.LonLat(row + 0.5, column + 0.5);
-	downloadBound = new OpenLayers.Bounds()
-	downloadBound.extend(lonlatTo);
-	downloadBound.extend(lonlatFrom);
-
+	lonlatTo = new OpenLayers.LonLat(row,column).transform(
+       new OpenLayers.Projection("EPSG:4326"),
+       new OpenLayers.Projection("EPSG:900913")
+     );
+	lonlatFrom = new OpenLayers.LonLat(row + 0.5, column + 0.5).transform(
+       new OpenLayers.Projection("EPSG:4326"),
+       new OpenLayers.Projection("EPSG:900913")
+     );
+	downloadBoundPoint = new OpenLayers.Bounds()
+	downloadBoundPoint.extend(lonlatTo);
+	downloadBoundPoint.extend(lonlatFrom);
+	downloadBound = downloadBoundPoint.clone().transform(new OpenLayers.Projection("EPSG:900913"), new OpenLayers.Projection("EPSG:4326"));
 	showFancyDownload('point');
 	map.events.unregister("click", map,clickDownloadPoint);
 }

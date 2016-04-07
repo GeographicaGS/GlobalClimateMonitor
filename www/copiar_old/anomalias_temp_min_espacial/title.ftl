@@ -1,1 +1,0 @@
-Monthly minimum temperature anomaly

@@ -1,4 +1,4 @@
-var map, gmap, gsat, ghyb, gter, osm, prem, anomp, anompp, pren, tempm, anomt, tempn, tempmin, anomtmin, tempminn, tempmax, anomtmax, tempmaxn, etp, anometp, anometpp, etpn, seai, prea, tempa, etpa, etpaa, preaa, tempaa, tempmina, tempmaxa, tempminaa, tempmaxaa, world_limits, trends, info, zoombox, vmes, vagno, vmes_n, filter, filter_n, filter_t, filter_a, filterParams, svalue, pureCoverage, control, trans, vlayer, pop, popups = {}, ley_trends1, ley_trends2;
+var map, gmap, gsat, ghyb, gter, osm, prem, anomp, anompp, pren, tempm, anomt, tempn, tempmin, anomtmin, tempminn, tempmax, anomtmax, tempmaxn, etp, anometp, anometpp, etpn, seai, prea, tempa, etpa, etpaa, preaa, tempaa, tempmina, tempmaxa, tempminaa, tempmaxaa, world_limits, trends, info, graph, zoombox, vmes, vagno, vmes_n, filter, filter_n, filter_t, filter_a, filterParams, svalue, pureCoverage, control, trans, vlayer, popups = {}, ley_trends1, ley_trends2;
 function init() {
 	resizeMe();
     OpenLayers.ProxyHost = "/cgi-bin/proxy.cgi?url=";
@@ -31,7 +31,6 @@ function init() {
 	var nav=new OpenLayers.Control.Navigation({dragPanOptions: {enableKinetic: true}});
 	var zoomio = new OpenLayers.Control.Zoom({title:"Change zoom level"});
 	map.addControl(zoomio);
-
 	map.addControl(mp);
 	map.addControl(nav);
 	map.addControl(new OpenLayers.Control.Attribution());
@@ -72,46 +71,56 @@ function init() {
     for (var i=0; i<10; ++i) {
         matrixIds[i] = "EPSG:900913:" + i;
     };
-    // Create Google Mercator layers
-    gmap = new OpenLayers.Layer.Google("Google Streets",
-                  {
-                      type: google.maps.MapTypeId.ROADMAP,
-                      sphericalMercator: true,
-					  numZoomLevels: 10,
-					  visibility: false,
-                  });
-    gsat = new OpenLayers.Layer.Google("Google Satellite",
-                  {
-                      type: google.maps.MapTypeId.SATELLITE,
-                      sphericalMercator: true,
-					  numZoomLevels: 10,
-					  visibility: false,
-					
-                  });
-    ghyb = new OpenLayers.Layer.Google("Google Hybrid",
-                  {
-                      type: google.maps.MapTypeId.HYBRID,
-                      sphericalMercator: true,
-					  numZoomLevels: 10,
-					  visibility: false,
-                  });
-    gter = new OpenLayers.Layer.Google("Google Terrain",
-                  {
-                      type: google.maps.MapTypeId.TERRAIN,
-                      sphericalMercator: true,
-					  numZoomLevels: 10,
-					  visibility: false,
-                  });
+//ESRI high-resolution World Imagery
+	ghyb = new OpenLayers.Layer.ArcGIS93Rest("ESRI Ocean Basemap", "http://server.arcgisonline.com/ARCGIS/rest/services/Ocean_Basemap/MapServer/export?f=image",
+    {   "format" :'png24',
+        "layers" :'show:0'
+    },
+    {   "isBaseLayer":true,
+        "opacity":1,
+        "attribution": "Sources: GEBCO, NOAA NGDC, IHO-IOC GEBCO, NGS, Esri, DeLorme",
+        "visibility":false
+    });
+
+
+
+	gsat = new OpenLayers.Layer.ArcGIS93Rest("ESRI Satellite", "http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/export?f=image",
+    {   "format" :'png24',
+        "layers" :'show:0'
+    },
+    {   "isBaseLayer":true,
+        "opacity":1,
+        "attribution": "Provided by <a href=\"http://www.esri.com/software/arcgis/arcgisonline/index.html\" target=\"_new\">ESRI</a>",
+        "visibility":false
+    });
+
+    gmap = new OpenLayers.Layer.ArcGIS93Rest("ESRI basemap", "http://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/export?f=image",
+        {   layers :'show:0'
+        },
+        {   isBaseLayer:true,
+            attribution: "Sources: Esri, DeLorme, HERE, TomTom, Intermap,<br> increment P Corp., GEBCO, USGS, FAO, NPS,<br>  NRCAN, GeoBase, IGN, Kadaster NL, Ordnance Survey,<br>  Esri Japan, METI, Esri China (Hong Kong), swisstopo,<br>  MapmyIndia, and the GIS User Community",
+            opacity:1,
+            visibility:false
+        });
+
+    gter = new OpenLayers.Layer.ArcGIS93Rest("ESRI Shaded Relief", "http://server.arcgisonline.com/ArcGIS/rest/services/World_Shaded_Relief/MapServer/export?f=image",
+        {   layers :'show:0'
+        },
+        {   isBaseLayer:true,
+            attribution:"ESRI Shaded Relief",
+            opacity:1,
+            visibility:false
+        });
     osm = new OpenLayers.Layer.OSM("Mapnik", "",
 				  {
-					  isBaseLayer: false, 
+					  isBaseLayer: true, 
 					  sphericalMercator: true, 
 					  zoomOffset: 2,
 					  visibility: false
 				  });
     sta_t = new OpenLayers.Layer.Stamen("toner-lite",
                   {
-					  isBaseLayer: false, 
+					  isBaseLayer: true, 
 					  sphericalMercator: true,
 					  numZoomLevels: 10,
 					  zoomOffset: 2,
@@ -120,17 +129,17 @@ function init() {
                   });	
     sta_w = new OpenLayers.Layer.Stamen("watercolor",
                   {
-					  isBaseLayer: false, 
+					  isBaseLayer: true, 
 					  sphericalMercator: true,
 					  numZoomLevels: 10,
 					  zoomOffset: 2,
 					  visibility: false,
 					  attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://creativecommons.org/licenses/by-sa/3.0">CC BY SA</a>.'
                   });
-    world_limits = new OpenLayers.Layer.WMS("White background with limits", "http://zidane.fgh.us.es:8080/geoserver/world/wms?", 
+    world_limits = new OpenLayers.Layer.WMS("White background with limits", "/geoserver/gcm/wms?", 
 				  
 				  {
-					  layers: 'WB', 
+					  layers: 'borders', 
 					  transparent: true, 
 					  format: "image/png"
 				  }, 
@@ -138,8 +147,20 @@ function init() {
 					  isBaseLayer: true, 
 					  displayInLayerSwitcher: false, 
 					  visibility: true, 
-					  singleTile: false,
-					  attribution:"http://www.mappinghacks.com"
+					  singleTile: false
+				  });
+    water = new OpenLayers.Layer.WMS("water", "/geoserver/gcm/wms?", 
+				  
+				  {
+					  layers: 'water', 
+					  transparent: true, 
+					  format: "image/png"
+				  }, 
+				  {
+					  isBaseLayer: true, 
+					  displayInLayerSwitcher: false, 
+					  visibility: true, 
+					  singleTile: false
 				  });
 	
 /*	world_limits = new OpenLayers.Layer.WMTS(
@@ -154,43 +175,45 @@ function init() {
 					opacity: 1,
 					isBaseLayer: true,
 					visibility: false,
-					attribution:"http://www.mappinghacks.com/"
+					
 				});
 */
-	prem = new OpenLayers.Layer.WMS("Monthly precipitation", "/geoserver/gcm/wms?", {layers: 'pre_mensual_espacial', transparent: true, format: "image/png", styles: "pre_mensual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	anomp = new OpenLayers.Layer.WMS("Monthly precipitation anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_pre_espacial', transparent: true, format: "image/png", styles: "anomalias_pre_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	anompp = new OpenLayers.Layer.WMS("Monthly precipitation anomalies p", "/geoserver/gcm/wms?", {layers: 'anomalias_pre_porcentaje_espacial', transparent: true, format: "image/png", styles: "anomalias_pre_porcentaje_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	pren = new OpenLayers.Layer.WMS("Monthly precipitation normals", "/geoserver/gcm/wms?", {layers: 'pre_normales_espacial', transparent: true, format: "image/png", styles: "pre_normales_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	tempm = new OpenLayers.Layer.WMS("Monthly temperature", "/geoserver/gcm/wms?", {layers: 'temp_mensual_espacial', transparent: true, format: "image/png", styles: "temp_mensual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	anomt = new OpenLayers.Layer.WMS("Monthly temperature anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_temp_espacial', transparent: true, format: "image/png", styles: "anomalias_temp_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	tempn = new OpenLayers.Layer.WMS("Monthly temperature normals", "/geoserver/gcm/wms?", {layers: 'temp_normales_espacial', transparent: true, format: "image/png", styles: "temp_normales_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	seai = new OpenLayers.Layer.WMS("Seasonality Index", "/geoserver/gcm/wms?", {layers: 'seasonality_index_espacial', transparent: true, format: "image/png", styles: "seasonality_index_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	tempmin = new OpenLayers.Layer.WMS("Monthly minimum temperature", "/geoserver/gcm/wms?", {layers: 'temp_min_mensual_espacial', transparent: true, format: "image/png", styles: "temp_min_mensual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	anomtmin = new OpenLayers.Layer.WMS("Monthly minimum temperature anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_temp_min_espacial', transparent: true, format: "image/png", styles: "anomalias_temp_min_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	tempminn = new OpenLayers.Layer.WMS("Monthly minimum temperature normals", "/geoserver/gcm/wms?", {layers: 'temp_min_normales_espacial', transparent: true, format: "image/png", styles: "temp_min_normales_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	tempmax = new OpenLayers.Layer.WMS("Monthly maximum temperature", "/geoserver/gcm/wms?", {layers: 'temp_max_mensual_espacial', transparent: true, format: "image/png", styles: "temp_max_mensual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	anomtmax = new OpenLayers.Layer.WMS("Monthly maximum temperature anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_temp_max_espacial', transparent: true, format: "image/png", styles: "anomalias_temp_max_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	tempmaxn = new OpenLayers.Layer.WMS("Monthly maximum temperature normals", "/geoserver/gcm/wms?", {layers: 'temp_max_normales_espacial', transparent: true, format: "image/png", styles: "temp_max_normales_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	etp = new OpenLayers.Layer.WMS("Monthly etp", "/geoserver/gcm/wms?", {layers: 'etp_mensual_espacial', transparent: true, format: "image/png", styles: "etp_mensual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	anometp = new OpenLayers.Layer.WMS("Monthly etp anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_etp_espacial', transparent: true, format: "image/png", styles: "anomalias_etp_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	anometpp = new OpenLayers.Layer.WMS("Monthly etp anomalies p", "/geoserver/gcm/wms?", {layers: 'anomalias_etp_porcentaje_espacial', transparent: true, format: "image/png", styles: "anomalias_etp_porcentaje_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	etpn = new OpenLayers.Layer.WMS("Monthly etp normals", "/geoserver/gcm/wms?", {layers: 'etp_normales_espacial', transparent: true, format: "image/png", styles: "etp_normales_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	prea = new OpenLayers.Layer.WMS("Annual precipitation", "/geoserver/gcm/wms?", {layers: 'pre_anual_espacial', transparent: true, format: "image/png", styles: "pre_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	tempa = new OpenLayers.Layer.WMS("Annual mean temperature", "/geoserver/gcm/wms?", {layers: 'temp_anual_espacial', transparent: true, format: "image/png", styles: "temp_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	tempmina = new OpenLayers.Layer.WMS("Annual minimum temperature", "/geoserver/gcm/wms?", {layers: 'temp_min_anual_espacial', transparent: true, format: "image/png", styles: "temp_min_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	tempmaxa = new OpenLayers.Layer.WMS("Annual maximum temperature", "/geoserver/gcm/wms?", {layers: 'temp_max_anual_espacial', transparent: true, format: "image/png", styles: "temp_max_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	etpa = new OpenLayers.Layer.WMS("Annual etp", "/geoserver/gcm/wms?", {layers: 'etp_anual_espacial', transparent: true, format: "image/png", styles: "etp_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	preaa = new OpenLayers.Layer.WMS("Annual precipitation anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_pre_anual_espacial', transparent: true, format: "image/png", styles: "anomalias_pre_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	tempaa = new OpenLayers.Layer.WMS("Annual mean temperature anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_temp_anual_espacial', transparent: true, format: "image/png", styles: "anomalias_temp_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	etpaa = new OpenLayers.Layer.WMS("Annual etp anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_etp_anual_espacial', transparent: true, format: "image/png", styles: "anomalias_etp_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	tempminaa = new OpenLayers.Layer.WMS("Annual minimum temperature anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_temp_min_anual_espacial', transparent: true, format: "image/png", styles: "anomalias_temp_min_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	tempmaxaa = new OpenLayers.Layer.WMS("Annual maximum temperature anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_temp_max_anual_espacial', transparent: true, format: "image/png", styles: "anomalias_temp_max_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1});
-	trends1 = new OpenLayers.Layer.WMS("trends_1", "/geoserver/gcm/wms?", {layers: 'trends_anual_espacial_1', transparent: true, format: "image/png", styles: "trends_anual_espacial_1"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, singleTile: false, ratio: 1});
-	trends2 = new OpenLayers.Layer.WMS("trends_2", "/geoserver/gcm/wms?", {layers: 'trends_anual_espacial_2', transparent: true, format: "image/png", styles: "trends_anual_espacial_2"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, singleTile: false, ratio: 1});
-	trends3 = new OpenLayers.Layer.WMS("trends_3", "/geoserver/gcm/wms?", {layers: 'trends_anual_espacial_3', transparent: true, format: "image/png", styles: "trends_anual_espacial_3"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, singleTile: false, ratio: 1});
-	trends4 = new OpenLayers.Layer.WMS("trends_4", "/geoserver/gcm/wms?", {layers: 'trends_anual_espacial_4', transparent: true, format: "image/png", styles: "trends_anual_espacial_4"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, singleTile: false, ratio: 1});
-	trends5 = new OpenLayers.Layer.WMS("trends_5", "/geoserver/gcm/wms?", {layers: 'trends_anual_espacial_5', transparent: true, format: "image/png", styles: "trends_anual_espacial_5"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, singleTile: false, ratio: 1});
-	
+	prem = new OpenLayers.Layer.WMS("Monthly precipitation", "/geoserver/gcm/wms?", {layers: 'pre_mensual_espacial', transparent: true, format: "image/png", styles: "ip_pre_mensual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	anomp = new OpenLayers.Layer.WMS("Monthly precipitation anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_pre_espacial', transparent: true, format: "image/png", styles: "ip_anomalias_pre_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	anompp = new OpenLayers.Layer.WMS("Monthly precipitation anomalies p", "/geoserver/gcm/wms?", {layers: 'anomalias_pre_porcentaje_espacial', transparent: true, format: "image/png", styles: "ip_anomalias_pre_porcentaje_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	pren = new OpenLayers.Layer.WMS("Monthly precipitation normals", "/geoserver/gcm/wms?", {layers: 'pre_normales_espacial', transparent: true, format: "image/png", styles: "ip_pre_normales_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	tempm = new OpenLayers.Layer.WMS("Monthly temperature", "/geoserver/gcm/wms?", {layers: 'temp_mensual_espacial', transparent: true, format: "image/png", styles: "ip_temp_mensual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	anomt = new OpenLayers.Layer.WMS("Monthly temperature anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_temp_espacial', transparent: true, format: "image/png", styles: "ip_anomalias_temp_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	tempn = new OpenLayers.Layer.WMS("Monthly temperature normals", "/geoserver/gcm/wms?", {layers: 'temp_normales_espacial', transparent: true, format: "image/png", styles: "ip_temp_normales_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	seai = new OpenLayers.Layer.WMS("Seasonality Index", "/geoserver/gcm/wms?", {layers: 'seasonality_index_espacial', transparent: true, format: "image/png", styles: "ip_seasonality_index_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	tempmin = new OpenLayers.Layer.WMS("Monthly minimum temperature", "/geoserver/gcm/wms?", {layers: 'temp_min_mensual_espacial', transparent: true, format: "image/png", styles: "ip_temp_min_mensual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	anomtmin = new OpenLayers.Layer.WMS("Monthly minimum temperature anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_temp_min_espacial', transparent: true, format: "image/png", styles: "ip_anomalias_temp_min_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	tempminn = new OpenLayers.Layer.WMS("Monthly minimum temperature normals", "/geoserver/gcm/wms?", {layers: 'temp_min_normales_espacial', transparent: true, format: "image/png", styles: "ip_temp_min_normales_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	tempmax = new OpenLayers.Layer.WMS("Monthly maximum temperature", "/geoserver/gcm/wms?", {layers: 'temp_max_mensual_espacial', transparent: true, format: "image/png", styles: "ip_temp_max_mensual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	anomtmax = new OpenLayers.Layer.WMS("Monthly maximum temperature anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_temp_max_espacial', transparent: true, format: "image/png", styles: "ip_anomalias_temp_max_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	tempmaxn = new OpenLayers.Layer.WMS("Monthly maximum temperature normals", "/geoserver/gcm/wms?", {layers: 'temp_max_normales_espacial', transparent: true, format: "image/png", styles: "ip_temp_max_normales_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	etp = new OpenLayers.Layer.WMS("Monthly etp", "/geoserver/gcm/wms?", {layers: 'etp_mensual_espacial', transparent: true, format: "image/png", styles: "ip_etp_mensual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	anometp = new OpenLayers.Layer.WMS("Monthly etp anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_etp_espacial', transparent: true, format: "image/png", styles: "ip_anomalias_etp_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	anometpp = new OpenLayers.Layer.WMS("Monthly etp anomalies p", "/geoserver/gcm/wms?", {layers: 'anomalias_etp_porcentaje_espacial', transparent: true, format: "image/png", styles: "ip_anomalias_etp_porcentaje_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	etpn = new OpenLayers.Layer.WMS("Monthly etp normals", "/geoserver/gcm/wms?", {layers: 'etp_normales_espacial', transparent: true, format: "image/png", styles: "ip_etp_normales_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	prea = new OpenLayers.Layer.WMS("Annual precipitation", "/geoserver/gcm/wms?", {layers: 'pre_anual_espacial', transparent: true, format: "image/png", styles: "ip_pre_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	tempa = new OpenLayers.Layer.WMS("Annual mean temperature", "/geoserver/gcm/wms?", {layers: 'temp_anual_espacial', transparent: true, format: "image/png", styles: "ip_temp_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	tempmina = new OpenLayers.Layer.WMS("Annual minimum temperature", "/geoserver/gcm/wms?", {layers: 'temp_min_anual_espacial', transparent: true, format: "image/png", styles: "ip_temp_min_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	tempmaxa = new OpenLayers.Layer.WMS("Annual maximum temperature", "/geoserver/gcm/wms?", {layers: 'temp_max_anual_espacial', transparent: true, format: "image/png", styles: "ip_temp_max_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	etpa = new OpenLayers.Layer.WMS("Annual etp", "/geoserver/gcm/wms?", {layers: 'etp_anual_espacial', transparent: true, format: "image/png", styles: "ip_etp_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	preaa = new OpenLayers.Layer.WMS("Annual precipitation anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_pre_anual_espacial', transparent: true, format: "image/png", styles: "ip_anomalias_pre_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	tempaa = new OpenLayers.Layer.WMS("Annual mean temperature anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_temp_anual_espacial', transparent: true, format: "image/png", styles: "ip_anomalias_temp_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	etpaa = new OpenLayers.Layer.WMS("Annual etp anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_etp_anual_espacial', transparent: true, format: "image/png", styles: "ip_anomalias_etp_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	tempminaa = new OpenLayers.Layer.WMS("Annual minimum temperature anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_temp_min_anual_espacial', transparent: true, format: "image/png", styles: "ip_anomalias_temp_min_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	tempmaxaa = new OpenLayers.Layer.WMS("Annual maximum temperature anomalies", "/geoserver/gcm/wms?", {layers: 'anomalias_temp_max_anual_espacial', transparent: true, format: "image/png", styles: "ip_anomalias_temp_max_anual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	trends1 = new OpenLayers.Layer.WMS("trends_1", "/geoserver/gcm/wms?", {layers: 'trends_anual_espacial_1', transparent: true, format: "image/png", styles: "ip_trends_anual_espacial_1"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	trends2 = new OpenLayers.Layer.WMS("trends_2", "/geoserver/gcm/wms?", {layers: 'trends_anual_espacial_2', transparent: true, format: "image/png", styles: "ip_trends_anual_espacial_2"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	trends3 = new OpenLayers.Layer.WMS("trends_3", "/geoserver/gcm/wms?", {layers: 'trends_anual_espacial_3', transparent: true, format: "image/png", styles: "ip_trends_anual_espacial_3"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	trends4 = new OpenLayers.Layer.WMS("trends_4", "/geoserver/gcm/wms?", {layers: 'trends_anual_espacial_4', transparent: true, format: "image/png", styles: "ip_trends_anual_espacial_4"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	trends5 = new OpenLayers.Layer.WMS("trends_5", "/geoserver/gcm/wms?", {layers: 'trends_anual_espacial_5', transparent: true, format: "image/png", styles: "ip_trends_anual_espacial_5"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	stnp = new OpenLayers.Layer.WMS("Stations precipitation", "/geoserver/gcm/wms?", {layers: 'stn_pre_mensual_espacial', transparent: true, format: "image/png", styles: "ip_stn_pre_mensual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+	stnt = new OpenLayers.Layer.WMS("Stations temperature", "/geoserver/gcm/wms?", {layers: 'stn_temp_mensual_espacial', transparent: true, format: "image/png", styles: "ip_stn_temp_mensual_espacial"}, {isBaseLayer: false, displayInLayerSwitcher: false, visibility: false, opacity: 1, singleTile: false, ratio: 1, attribution:"Map colors based on www.ColorBrewer.org, by Cynthia A. Brewer, Penn State"});
+
 	/*	indst = new OpenLayers.Layer.WMTS({
         name: "Number of stations of influence",
         url: "/geoserver/gwc/service/wmts",
@@ -210,23 +233,49 @@ function init() {
 
 //Filtro cql antes de info
 
-//borra popups
-function deletePopup(){
-	if(!pop) return;
-	map.removePopup(pop);
-	pop.destroy();
-	pop=null;
-}	
+	
 	
 //info
-
+/*
+    info2 =  function () {
+		$.get("about/about.html", function (html) {
+			$.fancybox({
+				'content': html, 
+				'height' : 700,
+				'autoDimensions':false,
+				'autoSize':false
+			});
+		});
+	}
+	
+		graph = function (){
+			map.events.register('click', map, function (e) {
+						  var xys = map.getLonLatFromViewPortPx(e.xy);
+						  var easting = xys.lon;
+						  var northing = xys.lat;
+						  alert ("You clicked near " + easting, northing);
+						  //Event.stop(e);
+			});
+		}
+		ungraph = function (){
+			map.events.unregister('click', map, function (e) {
+						  var xys = map.getLonLatFromViewPortPx(e.xy);
+						  var easting = xys.lon;
+						  var northing = xys.lat;
+						  alert ("You clicked near " + easting, northing);
+						  //Event.stop(e);
+			});
+		}
+*/
+//pru
+//fin pru	
         info = new OpenLayers.Control.WMSGetFeatureInfo({
             url: '/geoserver/gcm/wms?', 
             title: 'Identify features by clicking',
-			hover: true,
+			//hover: true,
             queryVisible: true,
 			maxFeatures: 1,
-			layers: [prem,anomp,anompp,pren,tempm,anomt,tempn,tempmin,anomtmin,tempminn,tempmax,anomtmax,tempmaxn,etp,anometp,anometpp,etpn,seai,prea,tempa,etpa,tempmina,tempmaxa,preaa,tempaa,etpaa,tempmaxaa,tempminaa,trends1,trends2,trends3,trends4,trends5],
+			layers: [stnp,stnt,prem,anomp,anompp,pren,tempm,anomt,tempn,tempmin,anomtmin,tempminn,tempmax,anomtmax,tempmaxn,etp,anometp,anometpp,etpn,seai,prea,tempa,etpa,tempmina,tempmaxa,preaa,tempaa,etpaa,tempmaxaa,tempminaa,trends1,trends2,trends3,trends4,trends5],
             eventListeners: {
                 beforegetfeatureinfo: function(event) {					
 					var capa_a = annuals.value;
@@ -263,23 +312,21 @@ function deletePopup(){
 					this.vendorParams = { cql_filter: filter }; 
                 }, 
 				getfeatureinfo: function(event) {
-					/*$.fancybox(event.text,{
+					$.fancybox(event.text,{
 						"closeBtn" : false,
-						helpers:  {
+						/*helpers:  {
 							overlay : null
-						}
-					});*/
-					deletePopup();
-					pop = new OpenLayers.Popup.FramedCloud(
-                         "Mipopup", 
-                         map.getLonLatFromPixel(event.xy),
-                         new OpenLayers.Size(0,0), //size
-                         "123.9 mm",//event.text,//content HTML
-                         null, //anchor
-                         false //closeBox
-                     );					 
-                     map.addPopup(pop);
-
+						}*/
+					});
+					
+                    // map.addPopup(new OpenLayers.Popup.FramedCloud(
+                    //     "chicken", 
+                    //     map.getLonLatFromPixel(event.xy),
+                    //     new OpenLayers.Size(400,300), //size
+                    //     event.text,//content HTML
+                    //     null, //anchor
+                    //     true //closeBox
+                    // ));
                 
 				}
             }
@@ -287,6 +334,8 @@ function deletePopup(){
         map.addControl(info);
 		zoombox = new OpenLayers.Control.ZoomBox();
 		map.addControl(zoombox);
+		graph = new OpenLayers.Control.ClickLayerInfo();
+		map.addControl(graph);
 		fullex = new OpenLayers.Control.ZoomToMaxExtent({title:"Zoom to full extent"});
 		map.addControl(fullex);
 		var navHistory = new OpenLayers.Control.NavigationHistory({title:"Navigation history"});
@@ -298,13 +347,13 @@ function deletePopup(){
 
 //fin info
 
-    map.addLayers([world_limits, osm, gsat, gmap, ghyb, gter, sta_t, sta_w, prem, anomp, anompp, pren, tempm, tempmin, anomt, anomtmin, tempn, tempminn, tempmax, anomtmax, tempmaxn, etp, anometp, anometpp, etpn, seai, prea, tempa, tempmina, tempmaxa, etpa, preaa, tempaa, etpaa, tempmaxaa, tempminaa, trends1, trends2, trends3, trends4, trends5]);
+    map.addLayers([world_limits, osm, gsat, gmap, ghyb, gter, sta_t, sta_w, stnp, stnt, prem, anomp, anompp, pren, tempm, tempmin, anomt, anomtmin, tempn, tempminn, tempmax, anomtmax, tempmaxn, etp, anometp, anometpp, etpn, seai, prea, tempa, tempmina, tempmaxa, etpa, preaa, tempaa, etpaa, tempmaxaa, tempminaa, trends1, trends2, trends3, trends4, trends5, water]);
 	map.setCenter(new OpenLayers.LonLat(10, 40).transform(new OpenLayers.Projection("EPSG:4326"), map.getProjectionObject()), 0);
     // create WMTS GetFeatureInfo control
     
 }  
 
-			function UpdateFilterfirst() {
+	function UpdateFilterfirst() {
                 if(pureCoverage)
                   return;
 				var capa = indicador.value
@@ -380,6 +429,7 @@ function deletePopup(){
 				updateleyenda(leyenda);
          	}
 			function UpdateFilter_a() {
+			$("#ctrl_station_ctrl").removeClass('enable');
 			browserIsIE = typeof document.documentMode == "number" || new Function("return/*@cc_on!@*/!1")();
 			if(browserIsIE === true)
 			{	
@@ -398,6 +448,10 @@ function deletePopup(){
 					else {
 					old_a = annuals.oldvalue;
 					}
+				var capa_st1 = 'Stations precipitation';
+				var capa_st2 = 'Stations temperature';
+				var vlayer_st1 = map.getLayersByName(capa_st1)[0];
+				var vlayer_st2 = map.getLayersByName(capa_st2)[0];
 				var capa_n = normals.value;
 				var capa = indicador.value;
 				var capa_a = annuals.value;
@@ -427,9 +481,12 @@ function deletePopup(){
 				vlayer_n.setVisibility(false);
 				vlayer_a.setVisibility(true);
 				vlayer_t.setVisibility(false);
+				vlayer_st1.setVisibility(false);
+				vlayer_st2.setVisibility(false);
 				updateleyenda(leyenda);
          	}
 			function UpdateFilter_n() {
+			$("#ctrl_station_ctrl").removeClass('enable');
 			browserIsIE = typeof document.documentMode == "number" || new Function("return/*@cc_on!@*/!1")();
 			if(browserIsIE === true)
 			{	
@@ -451,6 +508,10 @@ function deletePopup(){
 				var capa_n = normals.value;
 				var capa = indicador.value;
 				var capa_a = annuals.value;
+				var capa_st1 = 'Stations precipitation';
+				var capa_st2 = 'Stations temperature';
+				var vlayer_st1 = map.getLayersByName(capa_st1)[0];
+				var vlayer_st2 = map.getLayersByName(capa_st2)[0];
 				var capa_t = "trends_" + v_trends.value;
 				var vmes_n = mes_n.value;
 				var vperiod_n = period_n.value;
@@ -476,10 +537,13 @@ function deletePopup(){
 				vlayer_a.setVisibility(false);
 				vlayer_n.setVisibility(true);
 				vlayer_t.setVisibility(false);
+				vlayer_st1.setVisibility(false);
+				vlayer_st2.setVisibility(false);
 				updateleyenda(leyenda);
          	}
 			
 			function UpdateFilter_t() {
+			$("#ctrl_station_ctrl").removeClass('enable');
 			browserIsIE = typeof document.documentMode == "number" || new Function("return/*@cc_on!@*/!1")();
 			if(browserIsIE === true)
 			{	
@@ -501,6 +565,10 @@ function deletePopup(){
 				var ptrend = period_t.value;
 				var vtrend = v_trends.value;
 				var capa_n = normals.value;
+				var capa_st1 = 'Stations precipitation';
+				var capa_st2 = 'Stations temperature';
+				var vlayer_st1 = map.getLayersByName(capa_st1)[0];
+				var vlayer_st2 = map.getLayersByName(capa_st2)[0];
 				var capa_t = "trends_" + v_trends.value;
 				var capa = indicador.value;
 				var capa_a = annuals.value;
@@ -523,14 +591,145 @@ function deletePopup(){
                 };
                 // merge the new filter definitions
 				vlayer_t.mergeNewParams(filterParams);
-				vlayer_t.mergeNewParams({styles : "trends_anual_espacial_" + v_trends.value });
+				vlayer_t.mergeNewParams({styles : "ip_" + "trends_anual_espacial_" + v_trends.value });
 				vlayer.setVisibility(false);
 				vlayer_a.setVisibility(false);
 				vlayer_n.setVisibility(false);
 				vlayerold_t.setVisibility(false);
 				vlayer_t.setVisibility(true);
+				vlayer_st1.setVisibility(false);
+				vlayer_st2.setVisibility(false);
 				updateleyenda(leyenda);
-         	}			
+         	}		
+			function activate_stations() {
+					browserIsIE = typeof document.documentMode == "number" || new Function("return/*@cc_on!@*/!1")();
+					if(browserIsIE === true)
+					{	
+					window.document.execCommand('Stop');
+					}
+					else
+					{
+					window.stop();
+					}
+						if(pureCoverage)
+						  return;
+						var capa = indicador.value;
+						var capa_a = annuals.value;
+						var capa_n = normals.value;
+						var capa_t = "trends_" + v_trends.value;
+						
+						var strcapa = capa.substring(0, 9);
+						if (strcapa == 'Monthly p' && capa !== 'Monthly precipitation normals' ) {
+								var capa_st = 'Stations precipitation';
+						}
+						else if ((strcapa == 'Monthly t' || strcapa == 'Monthly m') && capa !== 'Monthly temperature normals'){
+								var capa_st = 'Stations temperature';
+						}
+						var vlayer = map.getLayersByName(capa)[0];
+						var vlayer_a = map.getLayersByName(capa_a)[0];
+						var vlayer_n = map.getLayersByName(capa_n)[0];
+						var vlayer_t = map.getLayersByName(capa_t)[0];
+						var vis_a = vlayer_a.visibility;
+						var vis_n = vlayer_n.visibility;
+						var vis_t = vlayer_t.visibility;
+						var vlayer_st = map.getLayersByName(capa_st)[0];	
+						var lname= vlayer.params ["LAYERS"];
+						var lname_st= vlayer_st.params ["LAYERS"];
+						var leyenda= "<img src='/geoserver/gcm/wms?service=WMS&version=1.3.0&request=getlegendgraphic&layer="+lname+"&format=image/png&style="+lname+"&width=12&height=12'/>";	
+						var vmes = mes.value;
+						var vagno = agno.value;						
+						var actdate = new Date();
+						var actmonth = actdate.getMonth();
+						var actyear = actdate.getFullYear();						
+						var filter = "mes = "+ vmes + " AND" + " agno = "+ vagno;
+						
+						// by default, reset all filters
+						var filterParams = {
+							cql_filter: null,
+						};
+						if (OpenLayers.String.trim(filter) != "") {
+								filterParams["cql_filter"] = filter;
+						};
+						
+						if (Number(vagno) >= actyear && Number(vmes) > actmonth) {
+							deactivate_stations();
+							alert ("Please, select a proper year/month.");
+							
+						}
+						else if (Number(vagno) >= 2013) {
+						deactivate_stations();
+						alert ("There is no data for selected layer/month/year.\n------------------------------\nPlease, modify your selection.\n------------------------------\nfrom January 2013, only layers of monthly rainfall,mean temperature and their anomalies are available.");
+						
+						}
+						else if (vis_a === true || vis_n === true || vis_t === true) {
+						deactivate_stations();
+						alert ("There is no data for selected layer/month/year.\n------------------------------\nPlease, modify your selection.\n------------------------------\nfrom January 2013, only layers of monthly rainfall,mean temperature and their anomalies are available.");
+						
+						}						
+						else {
+						// merge the new filter definitions
+						vlayer.mergeNewParams(filterParams);
+						vlayer_st.mergeNewParams(filterParams);
+						vlayer.setVisibility(false);
+						vlayer_st.setVisibility(true);
+						updateleyenda(leyenda);
+						}
+					}
+			function deactivate_stations() {
+					$("#ctrl_station_ctrl").removeClass('enable');
+					browserIsIE = typeof document.documentMode == "number" || new Function("return/*@cc_on!@*/!1")();
+					if(browserIsIE === true)
+					{	
+					window.document.execCommand('Stop');
+					}
+					else
+					{
+					window.stop();
+					}
+						if(pureCoverage)
+						  return;
+						var vmes = mes.value;
+						var vagno = agno.value;						
+						var filter = "mes = "+ vmes + " AND" + " agno = "+ vagno;						
+						// by default, reset all filters
+						var filterParams = {
+							cql_filter: null,
+						};
+						if (OpenLayers.String.trim(filter) != "") {
+								filterParams["cql_filter"] = filter;
+						};
+						var capa = indicador.value;
+						var strcapa = capa.substring(0, 9);
+						if (strcapa == 'Monthly p' && capa !== 'Monthly precipitation normals' ) {
+								var capa_st = 'Stations precipitation';
+								var vlayer_st = map.getLayersByName(capa_st)[0];
+								var lname_st= vlayer_st.params ["LAYERS"];								
+						        vlayer_st.mergeNewParams(filterParams);
+								vlayer_st.setVisibility(false);
+						}
+						else if ((strcapa == 'Monthly t' || strcapa == 'Monthly m') && capa !== 'Monthly temperature normals'){
+								var capa_st = 'Stations temperature';
+								var vlayer_st = map.getLayersByName(capa_st)[0];
+								var lname_st= vlayer_st.params ["LAYERS"];								
+						        vlayer_st.mergeNewParams(filterParams);
+								vlayer_st.setVisibility(false);
+						}
+						else  {
+								var capa_st1n = 'Stations precipitation';
+								var capa_st2n = 'Stations temperature';
+								var capa_st1 = map.getLayersByName(capa_st1n)[0]
+								var capa_st2 = map.getLayersByName(capa_st2n)[0]
+								capa_st1.setVisibility(false);
+								capa_st2.setVisibility(false);
+						}
+						var vlayer = map.getLayersByName(capa)[0];
+						var lname= vlayer.params ["LAYERS"];						
+						var leyenda= "<img src='/geoserver/gcm/wms?service=WMS&version=1.3.0&request=getlegendgraphic&layer="+lname+"&format=image/png&style="+lname+"&width=12&height=12'/>";	
+						// merge the new filter definitions
+						vlayer.mergeNewParams(filterParams);
+						vlayer.setVisibility(true);
+						updateleyenda(leyenda);
+					}						
 
 			function testLayer() {
 			var vmes = mes.value;
@@ -543,7 +742,7 @@ function deletePopup(){
 				alert ("Please, select a proper year/month.");
 			}
 			else if (Number(vagno) >= 2013 && capa !== "Monthly precipitation" && capa !== "Monthly precipitation anomalies" && capa !== "Monthly precipitation anomalies p" && capa !== "Monthly temperature" && capa !== "Monthly temperature anomalies") {
-			alert ("There is no data for selected layer/month/year.\n------------------------------\nPlease, modify your selection.\n------------------------------\nFrom January 2012, only layers of monthly rainfall,mean temperature and their anomalies are available.");
+			alert ("There is no data for selected layer/month/year.\n------------------------------\nPlease, modify your selection.\n------------------------------\nfrom January 2013, only layers of monthly rainfall,mean temperature and their anomalies are available.");
 				};
 			}
 			
@@ -555,7 +754,7 @@ function deletePopup(){
 			var actmonth = actdate.getMonth();
 			var actyear = actdate.getFullYear();
 			if (Number(vagno2) >= 2013 && capa2 !== "Seasonality Index" && capa2 !== "Annual precipitation" && capa2 !== "Annual precipitation anomalies" && capa2 !== "Annual precipitation anomalies p" && capa2 !== "Annual mean temperature" && capa2 !== "Annual mean temperature anomalies") {
-			alert ("There is no data for selected year.\n------------------------------\nPlease, modify your selection.\n------------------------------\nFrom January 2012, only layers of annual rainfall, temperature and their anomalies are available for this year.");
+			alert ("There is no data for selected year.\n------------------------------\nPlease, modify your selection.\n------------------------------\nfrom January 2013, only layers of annual rainfall, temperature and their anomalies are available for this year.");
 				};
 			}
 		
@@ -569,10 +768,22 @@ function deletePopup(){
 			var vlayer_t = map.getLayersByName(capa_t)[0];
 			var capa = indicador.value;
 			var vlayer = map.getLayersByName(capa)[0];
+			var strcapa = capa.substring(0, 9);
+			if (strcapa == 'Monthly p') {
+				var capa_st = 'Monthly etp';
+				}
+			else if (strcapa == 'Monthly t'){
+				var capa_st = 'Monthly etp anomalies';
+				}
+			else if (strcapa == 'Monthly e'){
+				var capa_st = 'Monthly etp anomalies';
+				}			
+			var vlayer_st = map.getLayersByName(capa_st)[0];
 			vlayer.setOpacity(tvalue / 100);
 			vlayer_n.setOpacity(tvalue / 100);
 			vlayer_a.setOpacity(tvalue / 100);
 			vlayer_t.setOpacity(tvalue / 100);
+			vlayer_st.setOpacity(tvalue / 100);
 		}
 
 

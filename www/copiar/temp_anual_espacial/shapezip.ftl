@@ -1,3 +1,0 @@
-zip=Annual_mean_temperature
-shp=Annual_mean_temperature
-txt=wfsrequest

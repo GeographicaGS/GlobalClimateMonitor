@@ -1,1 +1,0 @@
-Monthly rainfall anomaly

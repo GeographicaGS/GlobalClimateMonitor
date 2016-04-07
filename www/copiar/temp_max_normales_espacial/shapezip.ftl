@@ -1,3 +1,0 @@
-zip=Monthly_maximum_temperature_normals
-shp=Monthly_maximum_temperature_normals
-txt=wfsrequest

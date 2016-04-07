@@ -1,1 +1,0 @@
-Annual minimum temperature

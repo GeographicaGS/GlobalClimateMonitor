@@ -1,1 +1,0 @@
-Monthly maximum temperature anomaly
