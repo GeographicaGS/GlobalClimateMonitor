@@ -1,0 +1,23 @@
+<layer>
+  <name>etp_mensual_espacial</name>
+  <id>LayerInfoImpl--311f8841:1461e36b157:-c15</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--6c65001:146f163ca1a:cd3</id>
+  </defaultStyle>
+  <styles class="linked-hash-set">
+    <style>
+      <id>StyleInfoImpl--6c65001:1478677f8a4:-153f</id>
+    </style>
+    <style>
+      <id>StyleInfoImpl--6c65001:146f163ca1a:cd3</id>
+    </style>
+  </styles>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--311f8841:1461e36b157:-c16</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+</layer>
