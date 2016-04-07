@@ -107,6 +107,29 @@
                 <input type="button" name="Close" value="Close">
             </div>
         </div>
+        
+        <div id="overlay_chart">
+            <div class="overlay_chart"></div>    
+        </div>
+
+        <div id="chart_view">
+            <p class="title">Click on map point</p>
+            <div class="chart_section first enable">
+                <div class="chart_view"></div>
+                <div class="chartbuttons">
+                    <button title="close" class="expand"></button>
+                    <button title="expand" class="close"></button>
+                </div>
+            </div>
+            <div class="chart_section second">
+                <div class="chart_view"></div>
+                <div class="chartbuttons">
+                    <button title="close" class="expand"></button>
+                    <button title="expand" class="close"></button>
+                </div>
+            </div>
+            <button class="compare_chart">Compare</button>
+        </div>
 
         <div id="map"> <!-- INSERTE AQUÍ EL MAPA  --> 
 				<noscript>
@@ -115,10 +138,16 @@
 					<p><a style="color: blue; text-decoration: underline" href="http://www.activatejavascript.org/">Here</a> you will find instructions on how to enable Javascript in your browser.</p>
 				</noscript>
 				<!-- <div id="help" ><a href="#" class="" title="Take a guided tour">Guided tour</a></div> -->
-				<div id="tools1"><a id="ctrl_fullex_ctrl" title="Zoom to full extent"></a></div>
-				<a id="ctrl_zbox_ctrl" href="#" class="" title="Zoom to box"></a>
-				<a id="ctrl_info_ctrl" href="#" class="" title="Click on a point to get value"></a>
-				<a id="ctrl_station_ctrl" href="#" class="" title="Click to switch to number of stations map for this variable and month"></a>
+                <div id="map_tools">
+                    <div id="tools1"><a id="ctrl_fullex_ctrl" title="Zoom to full extent"></a></div> 
+                    <a id="ctrl_zbox_ctrl" href="#" class="" title="Zoom to box"></a>
+                    <a id="ctrl_info_ctrl" href="#" class="" title="Click on a point to get value"></a>
+                    <a id="ctrl_station_ctrl" href="#" class="" title="Click to switch to number of stations map for this variable and month"></a>
+
+                </div>
+
+				
+				
 				<!-- <a id="ctrl_info_capa_ctrl" href="#" class="" title="Click to get layer info"></a> -->
 				<a id="ctrl_play" href="#" class="" title="Click to open animation of normals in a new window"></a>
 
@@ -129,6 +158,37 @@
                         <li class="liBounding" title="Draw the box on the map to download the data">Download a bounding box</li>
                         <li class="liMap" title="Download data for the whole world">Complete map</li>
                     </ul>
+                </div>
+
+                <a id="ctrl_chart" href="#" class="" title="Chart options"></a>
+                <div id="ctrl_chart_options">
+                    <div class="box">
+                        <img src="img/GCV_miniatura_grafico-01.png" >
+                        <span>Climograph</span>
+                    </div>
+                    <div class="box">
+                        <img src="img/GCV_miniatura_grafico-04.png" >
+                        <span>Monthly series</span>
+                    </div>
+                    <div class="box">
+                        <img src="img/GCV_miniatura_grafico-05.png" >
+                        <span>Monthly anomalies series</span>
+                    </div>
+                    <div class="box">
+                        <img src="img/GCV_miniatura_grafico-03.png" >
+                        <span>Annual series</span>
+                    </div>
+                    <div class="box">
+                        <img src="img/GCV_miniatura_grafico-02.png" >
+                        <span>Annual anomalies series</span>
+                    </div>
+                    <div class="close">
+                        <img src="img/GCV_icon_cerrar_XL.svg" >
+                    </div>
+                </div>
+
+                <div id="close_chart_view">
+                    <span>Exit graph mode</span>
                 </div>
 
 				<!-- <a id="ctrl_change_viewer" href="#" class="" title="Click to launch viewer in WGS84"></a> -->
@@ -617,6 +677,10 @@
 		<script src="js/guided_tour.js"></script>
 		<script src="js/ClickLayerInfo.js"></script>		
         <script src="js/download.js"></script>
+        <script src="js/chart.js"></script>
+        <script src="js/highcharts.js"></script>
+        <script src="js/exporting.js" type="text/javascript"></script>
+        <script src="js/climograma.js"></script>
 
         <script>
                                 (function (i, s, o, g, r, a, m) {

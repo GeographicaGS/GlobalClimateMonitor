@@ -286,13 +286,14 @@ $(document).on("click", "#ctrl_info_ctrl", function () {
         info.deactivate();
     }
     else {
+    	desactivateAllTools();
         $(this).addClass("enable");
         info.activate();
-		zoombox.deactivate();
-		$("#ctrl_zbox_ctrl").removeClass("enable");
-		if($("#ctrl_download").hasClass('active')){
-			$("#ctrl_download").trigger('click');
-		}
+		// zoombox.deactivate();
+		// $("#ctrl_zbox_ctrl").removeClass("enable");
+		// if($("#ctrl_download").hasClass('active')){
+		// 	$("#ctrl_download").trigger('click');
+		// }
     }
 });
 $(document).on("click", "#ctrl_station_ctrl", function () {
@@ -315,13 +316,14 @@ $(document).on("click", "#ctrl_zbox_ctrl", function () {
         zoombox.deactivate();
     }
     else {
+    	desactivateAllTools();
         $(this).addClass("enable");
         zoombox.activate();
-		info.deactivate();
-		$("#ctrl_info_ctrl").removeClass("enable");
-		if($("#ctrl_download").hasClass('active')){
-			$("#ctrl_download").trigger('click');
-		}
+		// info.deactivate();
+		// $("#ctrl_info_ctrl").removeClass("enable");
+		// if($("#ctrl_download").hasClass('active')){
+		// 	$("#ctrl_download").trigger('click');
+		// }
     }
 });
 
