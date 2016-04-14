@@ -1,12 +1,13 @@
-function drawClimograph(container,lonlatTo,lonlatFrom){
+function drawClimograph(container,point){
 
-	var lonlat = new OpenLayers.LonLat(-667674,4492867);//	var lonlat = map.getLonLatFromViewPortPx(e.xy).transform(new OpenLayers.Projection("EPSG:900913"),new OpenLayers.Projection("EPSG:4326"));
+	var lonlat = new OpenLayers.LonLat(point.lon,point.lat);//	var lonlat = map.getLonLatFromViewPortPx(e.xy).transform(new OpenLayers.Projection("EPSG:900913"),new OpenLayers.Projection("EPSG:4326"));
 	var lonlatD = lonlat.transform(new OpenLayers.Projection("EPSG:900913"),new OpenLayers.Projection("EPSG:4326"));
 	var lon = Math.round(lonlat.lon);
 	var lat = Math.round(lonlat.lat);
 	var datos_p_norm,datos_t_norm,preArray = [],tmpArray = [];
 
-	var getPre = $.getJSON('/geoserver/gcm/wfs?service=wfs&version=1.0.0&SRS=EPSG:900913&request=GetFeature&typeNames=gcm:pre_normales_espacial&CQL_FILTER=BBOX%28geom,-667674,4492867,-656820,4501581%29AND%28period%20=%202000%20AND%20n_period%20=%2030%29&WIDTH=1024&HEIGHT=672&outputFormat=json', function(datos_p_norm) {
+	// var getPre = $.getJSON('/geoserver/gcm/wfs?service=wfs&version=1.0.0&SRS=EPSG:900913&request=GetFeature&typeNames=gcm:pre_normales_espacial&CQL_FILTER=BBOX%28geom,-667674,4492867,-656820,4501581%29AND%28period%20=%202000%20AND%20n_period%20=%2030%29&WIDTH=1024&HEIGHT=672&outputFormat=json', function(datos_p_norm) {
+	var getPre = $.getJSON('/geoserver/gcm/wfs?service=wfs&version=1.0.0&SRS=EPSG:900913&request=GetFeature&typeNames=gcm:pre_normales_espacial&CQL_FILTER=BBOX%28geom,'+point.lon+','+point.lat+','+point.lon+','+point.lat+'%29AND%28period%20=%202000%20AND%20n_period%20=%2030%29&WIDTH=1024&HEIGHT=672&outputFormat=json', function(datos_p_norm) {
 	                
 					$.each(datos_p_norm.features, function (key, val) {
 					  properties = val.properties;
@@ -16,7 +17,8 @@ function drawClimograph(container,lonlatTo,lonlatFrom){
 			
 		});
 
-	var getTmp = $.getJSON('/geoserver/gcm/wfs?service=wfs&version=1.0.0&SRS=EPSG:900913&request=GetFeature&typeNames=gcm:temp_normales_espacial&CQL_FILTER=BBOX%28geom,-667674,4492867,-656820,4501581%29AND%28period%20=%202000%20AND%20n_period%20=%2030%29&WIDTH=1024&HEIGHT=672&outputFormat=json', function(datos_t_norm) {
+	// var getTmp = $.getJSON('/geoserver/gcm/wfs?service=wfs&version=1.0.0&SRS=EPSG:900913&request=GetFeature&typeNames=gcm:temp_normales_espacial&CQL_FILTER=BBOX%28geom,-667674,4492867,-656820,4501581%29AND%28period%20=%202000%20AND%20n_period%20=%2030%29&WIDTH=1024&HEIGHT=672&outputFormat=json', function(datos_t_norm) {
+		var getTmp = $.getJSON('/geoserver/gcm/wfs?service=wfs&version=1.0.0&SRS=EPSG:900913&request=GetFeature&typeNames=gcm:temp_normales_espacial&CQL_FILTER=BBOX%28geom,'+point.lon+','+point.lat+','+point.lon+','+point.lat+'%29AND%28period%20=%202000%20AND%20n_period%20=%2030%29&WIDTH=1024&HEIGHT=672&outputFormat=json', function(datos_t_norm) {
 	                
 					$.each(datos_t_norm.features, function (key, val) {
 					  properties = val.properties;
@@ -36,9 +38,9 @@ function drawClimograph(container,lonlatTo,lonlatFrom){
 			title: {
 			    text: 'Average Monthly Temperature and Rainfall near ' + lon + ', ' + lat,
 			},
-			subtitle: {
-			    text: 'Globalclimatemonitor.org'
-			},
+			// subtitle: {
+			//     text: 'Globalclimatemonitor.org'
+			// },
 			xAxis: [{
 			    categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
 				'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],

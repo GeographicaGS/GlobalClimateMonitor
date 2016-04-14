@@ -1,14 +1,15 @@
-$(function () {
+function drawSerieTemp(container,point){
 // Calculamos primero la longitud del array, segun la sere temporal que se pida
 // Habra que hacerlo cuando se pueda extraer agno, mes de un select
 // En este caso seria algo asi como longitud array anual = ango_fin-agno_inicio +1. Longitud array mensual = (ango_fin-agno_inicio +1) * 12
 // Declaramos las variables. tmpArray = new Array(Longitud array mensual), mesArray = new Array(Longitud array mensual)
 var serie_t,tmpArray = new Array(1381),mesArray = new Array(1381);
-var lonlat = new OpenLayers.LonLat(-667674,4492867);//	var lonlat = map.getLonLatFromViewPortPx(e.xy).transform(new OpenLayers.Projection("EPSG:900913"),new OpenLayers.Projection("EPSG:4326"));
+var lonlat = new OpenLayers.LonLat(point.lon,point.lat);//	var lonlat = map.getLonLatFromViewPortPx(e.xy).transform(new OpenLayers.Projection("EPSG:900913"),new OpenLayers.Projection("EPSG:4326"));
 var lonlatD = lonlat.transform(new OpenLayers.Projection("EPSG:900913"),new OpenLayers.Projection("EPSG:4326"));
 var lon = Math.round(lonlat.lon);
 var lat = Math.round(lonlat.lat);
-var getTmp = $.getJSON('/geoserver/gcm/wfs?service=wfs&version=1.0.0&SRS=EPSG:900913&request=GetFeature&typeNames=gcm:temp_mensual_espacial&CQL_FILTER=BBOX%28geom,-667674,4492867,-656820,4501581%29&WIDTH=1024&HEIGHT=672&outputFormat=json', function(serie_t) {
+// var getTmp = $.getJSON('/geoserver/gcm/wfs?service=wfs&version=1.0.0&SRS=EPSG:900913&request=GetFeature&typeNames=gcm:temp_mensual_espacial&CQL_FILTER=BBOX%28geom,-667674,4492867,-656820,4501581%29&WIDTH=1024&HEIGHT=672&outputFormat=json', function(serie_t) {
+	var getTmp = $.getJSON('/geoserver/gcm/wfs?service=wfs&version=1.0.0&SRS=EPSG:900913&request=GetFeature&typeNames=gcm:temp_mensual_espacial&CQL_FILTER=BBOX%28geom,'+point.lon+','+point.lat+','+point.lon+','+point.lat+'%29&WIDTH=1024&HEIGHT=672&outputFormat=json', function(serie_t) {
  
                
 				$.each(serie_t.features, function (key, val) {
@@ -49,17 +50,17 @@ var getTmp = $.getJSON('/geoserver/gcm/wfs?service=wfs&version=1.0.0&SRS=EPSG:90
 
 $.when(getTmp).done(function() {
 	
-	var chart = new Highcharts.Chart({
+	chartObjects[$(container).closest('.chart_section').hasClass('first') ? 0:1] = new Highcharts.Chart({
 		chart: {
 			zoomType: 'xy',
-			renderTo: 'container'
+			renderTo: container
 		},
 		title: {
 		    text: 'Monthly Temperature series near ' + lon + ', ' + lat
 		},
-		subtitle: {
-		    text: 'Globalclimatemonitor.org'
-		},
+		// subtitle: {
+		//     text: 'Globalclimatemonitor.org'
+		// },
 		xAxis: {
 		    categories: mesArray
 		},
@@ -105,4 +106,4 @@ $.when(getTmp).done(function() {
         }]
 	    });
 	})
-})
+}

@@ -1112,6 +1112,7 @@ span.light {
     color:#c9cacd;
     position: absolute;
     width: 100%;
+    z-index: -1;
 }
 
 #chart_view .title.compare{
