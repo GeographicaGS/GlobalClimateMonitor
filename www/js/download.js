@@ -406,9 +406,12 @@ $(document).ready(function() {
 	});
 
 	$("#ctrl_download").click(function(e) {
-		$(this).toggleClass('active');
+		// $(this).toggleClass('active');
 		$("#ctrl_download_options").toggleClass('active');
-		if(!$(this).hasClass('active')){
+
+		// if(!$(this).hasClass('active')){
+		if($(this).hasClass('active')){
+			$(this).removeClass('active');
 			$("#ctrl_download_options li").removeClass('active');
 			map.events.unregister("click", map,clickDownloadPoint);
 			if(map.getLayersByName("Vector Layer").length > 0){
@@ -418,12 +421,14 @@ $(document).ready(function() {
         	
         	box.deactivate()
 		}else{
-			if($("#ctrl_info_ctrl").hasClass('enable')){
-				$("#ctrl_info_ctrl").trigger('click');
-			}
-			if($("#ctrl_zbox_ctrl").hasClass('enable')){
-				$("#ctrl_zbox_ctrl").trigger('click');
-			}
+			desactivateAllTools();
+			$(this).addClass('active');
+			// if($("#ctrl_info_ctrl").hasClass('enable')){
+			// 	$("#ctrl_info_ctrl").trigger('click');
+			// }
+			// if($("#ctrl_zbox_ctrl").hasClass('enable')){
+			// 	$("#ctrl_zbox_ctrl").trigger('click');
+			// }
 		}
 	});
 
