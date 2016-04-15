@@ -42,6 +42,7 @@ $(document).ready(function() {
 		// $('#ctrl_download').hide();
 		// $('#ctrl_chart').hide();
 		map.addLayer(chartPoints);
+		$( "#sidebar select" ).prop( "disabled", true );
 
 		chartType = $(this).attr('type');
 		$('#close_chart_view').addClass('enable');
@@ -56,6 +57,7 @@ $(document).ready(function() {
 
 		map.removeLayer(chartPoints);
 		chartPoints.removeAllFeatures();
+		$( "#sidebar select" ).prop( "disabled", false );
 
 		$('#close_chart_view').removeClass('enable');
 		

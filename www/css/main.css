@@ -1026,7 +1026,7 @@ span.light {
     border: 1px solid #909599;
     top: 60px;
     left: 92px;
-    z-index: 1000;
+    z-index: 9999;
     display: none;
 }
 
