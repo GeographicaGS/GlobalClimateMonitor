@@ -8,10 +8,10 @@ var lat = Math.round(lonlat.lat);
 	var getTmp = $.getJSON('/geoserver/gcm/wfs?service=wfs&version=1.0.0&SRS=EPSG:900913&request=GetFeature&typeNames=gcm:anomalias_temp_anual_espacial&CQL_FILTER=BBOX%28geom,'+point.lon+','+point.lat+','+point.lon+','+point.lat+'%29&WIDTH=1024&HEIGHT=672&outputFormat=json', function(serie_t) {
        
 				$.each(serie_t.features, function (key, val) {
-				  properties = val.properties;
-				  agno = properties.agno;
-				  temp = properties.anomalia_temp_anual;
-				  ix = (agno-1901);
+				  var properties = val.properties;
+				  var agno = properties.agno;
+				  var temp = properties.anomalia_temp_anual;
+				  var ix = (agno-1901);
 				  tmpArray.splice(ix,1,temp);
 				  agnoArray.splice(ix,1,agno)
 				});

@@ -13,10 +13,10 @@ var lat = Math.round(lonlat.lat);
  
                
 				$.each(serie_t.features, function (key, val) {
-				  properties = val.properties;
-				  agno = properties.agno;
-				  mes = properties.mes;
-				  temp = properties.temp_mes;
+				  var properties = val.properties;
+				  var agno = properties.agno;
+				  var mes = properties.mes;
+				  var temp = properties.temp_mes;
 				  ix = ((agno-1901)*12) + (mes-1);
 				  if (mes==1){
 				  mes_name = 'Jan ' + agno}
