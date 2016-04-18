@@ -9,10 +9,10 @@ var lat = Math.round(lonlat.lat);
  
                
 				$.each(serie_t.features, function (key, val) {
-				  properties = val.properties;
-				  agno = properties.agno;
-				  temp = properties.temp_anual;
-				  ix = (agno-1901);
+				  var properties = val.properties;
+				  var agno = properties.agno;
+				  var temp = properties.temp_anual;
+				  var ix = (agno-1901);
 				  tmpArray.splice(ix,1,temp);
 				  agnoArray.splice(ix,1,agno)
 				});
